@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.ExampleCommand;
@@ -21,20 +22,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
 
   // Subsystems //
-  private final DrivetrainSubsystem m_DrivetrainSubsystem = new DrivetrainSubsystem();
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+  // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
+  private final Joystick m_driverController = new Joystick(Constants.DRIVER);
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+
   // Commands //
-  private final ArcadeDriveCommand m_arcadeDriveCommand = new ArcadeDriveCommand(m_DrivetrainSubsystem);
+  private final ArcadeDriveCommand m_arcadeDriveCommand = new ArcadeDriveCommand(m_drivetrainSubsystem);
 
-  // Default Teleop Command //
-
-  // Default Auto Command //
+  // Auto-Only Commands //
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // Set default command to arcade drive when in teleop
+    m_drivetrainSubsystem.setDefaultCommand(m_arcadeDriveCommand);
+
     // Configure the button bindings
     configureButtonBindings();
   }
