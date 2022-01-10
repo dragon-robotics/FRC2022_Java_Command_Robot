@@ -22,6 +22,7 @@ public class RobotContainer {
 
   // Subsystems //
   private final DrivetrainSubsystem m_DrivetrainSubsystem = new DrivetrainSubsystem();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Commands //
   private final ArcadeDriveCommand m_arcadeDriveCommand = new ArcadeDriveCommand(m_DrivetrainSubsystem);
@@ -29,6 +30,7 @@ public class RobotContainer {
   // Default Teleop Command //
 
   // Default Auto Command //
+  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -45,13 +47,13 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {}
 
-  // /**
-  //  * Use this to pass the autonomous command to the main {@link Robot} class.
-  //  *
-  //  * @return the command to run in autonomous
-  //  */
-  // public Command getAutonomousCommand() {
-  //   // An ExampleCommand will run in autonomous
-  //   return m_autoCommand;
-  // }
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // An ExampleCommand will run in autonomous
+    return m_autoCommand;
+  }
 }
