@@ -18,7 +18,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // NavX //
   
   /** Creates a new Drivetrain. */
-  public DrivetrainSubsystem() {}
+  public DrivetrainSubsystem() {
+
+    // Create TalonFX Motor Controller for motor controls //
+
+    // Initialize TalonFX to be 0 at the beginning //
+
+    // Create NavX Motion Processor for robot orientation and positioning //
+    
+    // Intialize all gyro readings to 0 //
+
+    // Create Encoder for wheel rotation information //
+
+    // Intialize all encoder readings to 0 //
+    
+  }
 
   // Drive Modes //
   public void arcadeDrive(double speed, double rotation) {
