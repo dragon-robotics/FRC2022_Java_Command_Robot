@@ -18,10 +18,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Declare subsystem attribute/components //
   
   // Motor Controllers //
-  WPI_TalonFX m_talonLT = new WPI_TalonFX(1);
+  WPI_TalonFX m_talonLT = new WPI_TalonFX(2);
   WPI_TalonFX m_talonLB = new WPI_TalonFX(1);
-  WPI_TalonFX m_talonRT = new WPI_TalonFX(0);
-  WPI_TalonFX m_talonRB = new WPI_TalonFX(0);
+  WPI_TalonFX m_talonRT = new WPI_TalonFX(4);
+  WPI_TalonFX m_talonRB = new WPI_TalonFX(3);
   MotorControllerGroup m_motorL = new MotorControllerGroup(m_talonLB, m_talonLT);
   MotorControllerGroup m_motorR = new MotorControllerGroup(m_talonRB, m_talonRT);
   DifferentialDrive m_drive = new DifferentialDrive(m_motorL, m_motorR);

@@ -4,19 +4,22 @@
 
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class ArcadeDriveCommand extends CommandBase {
 
   private final DrivetrainSubsystem m_drivetrain;
-
-  private double m_speed;
-  private double m_rotation;
-  private DrivetrainSubsystem drivetrain;
+  private final Supplier<Double> m_speed;
+  private final Supplier<Double> m_rotation;
 
   /** Creates a new ArcadeDrive. */
-  public ArcadeDriveCommand(DrivetrainSubsystem drivetrain, double speed, double rotation) {
+  public ArcadeDriveCommand(
+    DrivetrainSubsystem drivetrain,
+    Supplier<Double> speed,
+    Supplier<Double> rotation) {
     m_drivetrain = drivetrain;
     m_speed = speed;
     m_rotation = rotation;
@@ -32,7 +35,7 @@ public class ArcadeDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_drivetrain.arcadeDrive(m_speed, m_rotation);
+    m_drivetrain.arcadeDrive(m_speed.get(), m_rotation.get());
   }
 
 
