@@ -7,8 +7,8 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -22,8 +22,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   WPI_TalonFX m_talonLB = new WPI_TalonFX(1);
   WPI_TalonFX m_talonRT = new WPI_TalonFX(0);
   WPI_TalonFX m_talonRB = new WPI_TalonFX(0);
-  SpeedControllerGroup m_motorL = new SpeedControllerGroup(m_talonLB, m_talonLT);
-  SpeedControllerGroup m_motorR = new SpeedControllerGroup(m_talonRB, m_talonRT);
+  MotorControllerGroup m_motorL = new MotorControllerGroup(m_talonLB, m_talonLT);
+  MotorControllerGroup m_motorR = new MotorControllerGroup(m_talonRB, m_talonRT);
   DifferentialDrive m_drive = new DifferentialDrive(m_motorL, m_motorR);
 
   // Encoders //
