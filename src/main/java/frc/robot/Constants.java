@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -21,22 +23,41 @@ public final class Constants {
     // Joystick Mapping IDs //
 
     // Joystick Analog Axis/Stick //
-    final static int STICK_LEFT_X = 0;
-    final static int STICK_LEFT_Y = 1;
-    final static int TRIGGER_LEFT = 2;
-    final static int TRIGGER_RIGHT = 3;
-    final static int STICK_RIGHT_X = 4;
-    final static int STICK_RIGHT_Y = 5;
+    public final static int STICK_LEFT_X = 0;
+    public final static int STICK_LEFT_Y = 1;
+    public final static int TRIGGER_LEFT = 2;
+    public final static int TRIGGER_RIGHT = 3;
+    public final static int STICK_RIGHT_X = 4;
+    public final static int STICK_RIGHT_Y = 5;
 
     // Joystick Buttons //
-    final static int BTN_A = 1;
-    final static int BTN_B = 2;
-    final static int BTN_X = 3;
-    final static int BTN_Y = 4;
-    final static int BUMPER_LEFT = 5;
-    final static int BUMPER_RIGHT = 6;
-    final static int BTN_BACK = 7;
-    final static int BTN_START = 8;
-    final static int BTN_STICK_LEFT = 9;
-    final static int BTN_STICK_RIGHT = 10;
+    public final static int BTN_A = 1;
+    public final static int BTN_B = 2;
+    public final static int BTN_X = 3;
+    public final static int BTN_Y = 4;
+    public final static int BUMPER_LEFT = 5;
+    public final static int BUMPER_RIGHT = 6;
+    public final static int BTN_BACK = 7;
+    public final static int BTN_START = 8;
+    public final static int BTN_STICK_LEFT = 9;
+    public final static int BTN_STICK_RIGHT = 10;
+
+    /* Feedforward Feedback Gain */
+    public static final double ksVolts = 0.22;
+    public static final double kvVoltSecondPerMeter = 1.98;
+    public static final double kaVoltSecondSquaredPerMeter = 0.2;
+    // Example value only - as above, this must be tuned for your drive!
+    public static final double kPDriveVel = 8.5;
+
+    /* DifferentialDriveKinematics */
+    public static final double kTrackwidthMeters = 0.69;
+    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+
+    /* Max Trajectory Velocity/Acceleration */
+    public static final double kMaxSpeedMeteresPerSecond = 3;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+
+    /* Ramsete Parameters */
+    public static final double kRamseteB = 2;
+    public static final double kRamseteZeta = 0.7;
 }
