@@ -4,7 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
 
 public class DrivetrainSubsystem extends SubsystemBase {
   
@@ -12,11 +18,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Declare subsystem attribute/components //
   
   // Motor Controllers //
+  WPI_TalonFX m_talonLT = new WPI_TalonFX(1);
+  WPI_TalonFX m_talonLB = new WPI_TalonFX(1);
+  WPI_TalonFX m_talonRT = new WPI_TalonFX(0);
+  WPI_TalonFX m_talonRB = new WPI_TalonFX(0);
+  SpeedControllerGroup m_motorL = new SpeedControllerGroup(m_talonLB, m_talonLT);
+  SpeedControllerGroup m_motorR = new SpeedControllerGroup(m_talonRB, m_talonRT);
+  DifferentialDrive m_drive = new DifferentialDrive(m_motorL, m_motorR);
 
   // Encoders //
   
   // NavX //
-  
+  AHRS ahrs = new AHRS(SPI.Port.kMXP); 
+
   /** Creates a new Drivetrain. */
   public DrivetrainSubsystem() {
 
@@ -36,11 +50,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Drive Modes //
   public void arcadeDrive(double speed, double rotation) {
-
+    m_drive.arcadeDrive(speed, rotation);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
-
+    m_drive.tankDrive(leftSpeed, rightSpeed);
   }
   
 
