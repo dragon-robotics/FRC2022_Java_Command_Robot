@@ -29,8 +29,7 @@ public class RobotContainer {
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // Commands //
-  private final ArcadeDriveCommand m_arcadeDriveCommand = new ArcadeDriveCommand(m_drivetrainSubsystem);
+
 
   // Auto-Only Commands //
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
@@ -39,7 +38,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(m_arcadeDriveCommand);
+    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
 
     // Configure the button bindings
     configureButtonBindings();
@@ -61,5 +60,14 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return m_autoCommand;
+  }
+
+  public Command getArcadeDriveCommand(){
+      // Commands //
+    double speed = m_driverController.getRawAxis(1);
+    double rotation = m_driverController.getRawAxis(4);
+
+
+     return new ArcadeDriveCommand(m_drivetrainSubsystem, speed, rotation);
   }
 }
