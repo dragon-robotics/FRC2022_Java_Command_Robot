@@ -29,8 +29,6 @@ public class RobotContainer {
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-
-
   // Auto-Only Commands //
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -64,8 +62,6 @@ public class RobotContainer {
 
   public Command getArcadeDriveCommand(){
       // Commands //
-    double speed = m_driverController.getRawAxis(1);
-    double rotation = m_driverController.getRawAxis(4);
      return new ArcadeDriveCommand(m_drivetrainSubsystem, () -> m_driverController.getRawAxis(1), () -> m_driverController.getRawAxis(4));
   }
 }

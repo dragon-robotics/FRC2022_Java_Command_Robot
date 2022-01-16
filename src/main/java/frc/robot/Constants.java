@@ -17,8 +17,8 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 public final class Constants {
 
     // Controller IDs, DRIVER = 0, OPERATOR = 1
-    final static int DRIVER = 0;
-    final static int OPERATOR = 1;
+    public final static int DRIVER = 0;
+    public final static int OPERATOR = 1;
 
     // Joystick Mapping IDs //
 
