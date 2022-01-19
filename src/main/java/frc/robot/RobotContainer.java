@@ -61,7 +61,11 @@ public class RobotContainer {
   }
 
   public Command getArcadeDriveCommand(){
-      // Commands //
-     return new ArcadeDriveCommand(m_drivetrainSubsystem, () -> m_driverController.getRawAxis(1), () -> m_driverController.getRawAxis(4));
+    // Commands //
+    return new ArcadeDriveCommand(
+      m_drivetrainSubsystem,
+      () -> m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+    );
   }
 }
