@@ -57,19 +57,19 @@ public final class Constants {
         new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
 
     // Feedforward Feedback Gain //
-    public static final double ksVolts = 0.22;
-    public static final double kvVoltSecondsPerMeter = 1.98;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.2;
+    public static final double ksVolts = 0.53308;
+    public static final double kvVoltSecondsPerMeter = 2.46;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.1619;
     // Example value only - as above, this must be tuned for your drive!
-    public static final double kPDriveVel = 8.5;
+    public static final double kPDriveVel = 1.9925;
 
     // DifferentialDriveKinematics //
-    public static final double kTrackwidthMeters = 0.69;
+    public static final double kTrackwidthMeters = 0.555;
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
 
     // Max Trajectory Velocity/Acceleration //
-    public static final double kMaxSpeedMetersPerSecond = 3;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxSpeedMetersPerSecond = 0.8;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.8;
 
     // Ramsete Parameters //
     public static final double kRamseteB = 2;
