@@ -17,6 +17,8 @@ import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 
 public class DrivetrainSubsystem extends SubsystemBase {
@@ -43,6 +45,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Odometry class for tracking robotpose
   private final DifferentialDriveOdometry m_odometry;
 
+  // This network table is setup to track the robot's position after each X and Y update //
+  NetworkTableEntry m_xEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("X");
+  NetworkTableEntry m_yEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Y");
+
   /** Creates a new Drivetrain. */
   public DrivetrainSubsystem() {
 
@@ -59,10 +65,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_talonRB.configFactoryDefault();
 
     // Set neutral mode to brake on all motors //
-    m_talonLT.setNeutralMode(NeutralMode.Brake);
-    m_talonLB.setNeutralMode(NeutralMode.Brake);
-    m_talonRT.setNeutralMode(NeutralMode.Brake);
-    m_talonRB.setNeutralMode(NeutralMode.Brake);
+    m_talonLT.setNeutralMode(NeutralMode.Coast);
+    m_talonLB.setNeutralMode(NeutralMode.Coast);
+    m_talonRT.setNeutralMode(NeutralMode.Coast);
+    m_talonRB.setNeutralMode(NeutralMode.Coast);
+
+    // Invert the right motors //
+    m_motorR.setInverted(true);
 
     m_motorR.setInverted(true);
 
@@ -95,6 +104,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     m_odometry.update(
         m_gyro.getRotation2d(), getDistance(m_leftEncoder), getDistance(m_rightEncoder));
+
+    // Added code to record X and Y odometry data //
+    var translation = m_odometry.getPoseMeters().getTranslation();
+    m_xEntry.setNumber(translation.getX());
+    m_yEntry.setNumber(translation.getY()); 
   }
 
   // Drive Modes //
@@ -118,8 +132,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
 
-    double leftSpeed = m_leftEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANTCE_PER_PULSE * 1000;
-    double rightSpeed = m_rightEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANTCE_PER_PULSE * 1000;
+    double leftSpeed = m_leftEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 10;
+    double rightSpeed = m_rightEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 10;
     return new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
   }
 
@@ -130,7 +144,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getDistance(TalonFXSensorCollection encoder){
-    return encoder.getIntegratedSensorPosition() * Constants.ENCODER_DISTANTCE_PER_PULSE;
+    return encoder.getIntegratedSensorPosition() * Constants.ENCODER_DISTANCE_PER_PULSE;
   }
 
   // Gets the average encoder distance in meters //
@@ -142,7 +156,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   
   /** Zeroes the heading of the robot. */
   public void zeroHeading(){
-    m_gyro.calibrate();   // Resets the Gyro
+    m_gyro.reset();   // Resets the Gyro
   }
 
   /**
