@@ -1,8 +1,11 @@
 {
   "SysId": {
     "Analysis Type": "Drivetrain",
+    "AnalyzerJSONLocation": "C:\\Users\\Dragon Robotics 2375\\Desktop\\FRC\\2022\\Project\\FRC2022_Java_Command_Robot\\sysid_data20220120-165836.json",
     "NetworkTables Settings": {
       "serverTeam": "2375"
-    }
+    },
+    "mode": "Client",
+    "serverTeam": "2375"
   }
 }
