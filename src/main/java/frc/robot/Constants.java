@@ -49,7 +49,7 @@ public final class Constants {
 
     // Encoder Constants //
     public static final int ENCODER_CPR = 2048;
-    public static final double ENCODER_DISTANTCE_PER_PULSE = 
+    public static final double ENCODER_DISTANCE_PER_PULSE = 
         (WHEEL_DIAMETER_METERS * Math.PI) / ((double) ENCODER_CPR * GEAR_RATIO);
 
     // Differential Drive Kinematics //
