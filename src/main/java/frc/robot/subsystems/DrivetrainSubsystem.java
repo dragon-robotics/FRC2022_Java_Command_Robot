@@ -73,8 +73,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Invert the right motors //
     m_motorR.setInverted(true);
 
-    m_motorR.setInverted(true);
-
     // Reset encoders to 0 //
     resetEncoders();
 
