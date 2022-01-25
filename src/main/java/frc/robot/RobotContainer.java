@@ -37,7 +37,7 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+  // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Auto-Only Commands //
 
