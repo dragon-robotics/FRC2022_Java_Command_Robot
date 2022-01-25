@@ -41,10 +41,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   TalonFXSensorCollection m_rightEncoder = new TalonFXSensorCollection(m_talonRT);
   
   // Gyro - NavX //
-  AHRS m_gyro = new AHRS(SPI.Port.kMXP); 
-
-  // Used to fix gyro offset issue //
-  private double gyroOffset = 0.0;
+  AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   // Odometry class for tracking robotpose
   private final DifferentialDriveOdometry m_odometry;
@@ -57,6 +54,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   NetworkTableEntry m_rightEncoderEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder");
   NetworkTableEntry m_leftEncoderDistanceEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Left Encoder Distance");
   NetworkTableEntry m_rightEncoderDistanceEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder Distance");
+  NetworkTableEntry m_leftEncoderVelocityEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Left Encoder Velocity");
+  NetworkTableEntry m_rightEncoderVelocityEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder Velocity");
+  NetworkTableEntry m_leftEncoderWheelSpeedEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Left Encoder Wheel Speed");
+  NetworkTableEntry m_rightEncoderWheelSpeedEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder Wheel Speed");
+
 
   /** Creates a new Drivetrain. */
   public DrivetrainSubsystem() {
@@ -84,15 +86,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Reset encoders to 0 //
     resetEncoders();
-
-    // Calibrate and Reset NavX //
-    m_gyro.calibrate();
     
     // Intialize all gyro readings to 0 //
-    m_gyro.zeroYaw();
-
-    // Capture intial offset
-    gyroOffset = m_gyro.getRotation2d().getDegrees();
+    zeroHeading();
 
     // Get TalonFX Integrated Sensor Values
     // Source: https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20Talon%20FX%20(Falcon%20500)/IntegratedSensor/src/main/java/frc/robot/Robot.java//
@@ -105,7 +101,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // m_talonRT.configAllSettings(configs);
 
     // Initialize Robot Odometry //
-    m_odometry = new DifferentialDriveOdometry(getRotation2d());
+    m_odometry = new DifferentialDriveOdometry(m_gyro.getRotation2d());
     
   }
 
@@ -113,21 +109,32 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_odometry.update(
-        getRotation2d(), getDistance(m_leftEncoder), -getDistance(m_rightEncoder));
+        m_gyro.getRotation2d(), getDistance(m_leftEncoder), -getDistance(m_rightEncoder));
 
     // Added code to record X and Y odometry data //
     var translation = m_odometry.getPoseMeters().getTranslation();
     m_xEntry.setNumber(translation.getX());
     m_yEntry.setNumber(translation.getY());
 
-    double degree = getRotation2d().getDegrees();
+    double degree = getHeading();
     m_angleEntry.setDouble(degree);
 
+    // Output raw encoder values //
     m_leftEncoderEntry.setDouble(m_leftEncoder.getIntegratedSensorPosition());
     m_rightEncoderEntry.setDouble(m_rightEncoder.getIntegratedSensorPosition());
 
+    // Output encoder values converted to distance //
     m_leftEncoderDistanceEntry.setDouble(getDistance(m_leftEncoder));
     m_rightEncoderDistanceEntry.setDouble(-getDistance(m_rightEncoder));
+
+    // Output raw encoder velocity values //
+    m_leftEncoderVelocityEntry.setDouble(m_leftEncoder.getIntegratedSensorVelocity());
+    m_rightEncoderVelocityEntry.setDouble(-m_rightEncoder.getIntegratedSensorVelocity());
+
+    // Output raw wheel speed values //
+    m_leftEncoderWheelSpeedEntry.setDouble(getWheelSpeeds().leftMetersPerSecond);
+    m_rightEncoderWheelSpeedEntry.setDouble(getWheelSpeeds().rightMetersPerSecond);
+
   }
 
   // Drive Modes //
@@ -151,8 +158,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   public DifferentialDriveWheelSpeeds getWheelSpeeds(){
 
-    double leftSpeed = m_leftEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 1000;
-    double rightSpeed = m_rightEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 1000;
+    double leftSpeed = m_leftEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 10;
+    double rightSpeed = -m_rightEncoder.getIntegratedSensorVelocity() * Constants.ENCODER_DISTANCE_PER_PULSE * 10;  // Need to invert the results
     return new DifferentialDriveWheelSpeeds(leftSpeed, rightSpeed);
   }
 
@@ -184,7 +191,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return getRotation2d().getDegrees();
+    return m_gyro.getRotation2d().getDegrees();
   }
 
   /**
@@ -200,14 +207,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return m_odometry.getPoseMeters();
   }
 
-  public Rotation2d getRotation2d(){
-    double degrees = m_gyro.getRotation2d().getDegrees() - gyroOffset;
-    System.out.println(degrees);
-    return Rotation2d.fromDegrees(degrees);
-  }
-
   public void resetOdometry(Pose2d pose){
     resetEncoders();
-    m_odometry.resetPosition(pose, getRotation2d());
+    m_odometry.resetPosition(pose, m_gyro.getRotation2d());
   }
 }
