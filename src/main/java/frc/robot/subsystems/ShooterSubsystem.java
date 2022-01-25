@@ -28,14 +28,14 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void shoot() {
-    m_shooterL.set(0.1);
-    m_shooterR.set(0.1);
+    m_shooterL.set(-0.1);
+    m_shooterR.set(-0.1);
 
   }
 
   public void shoot(double speed){
-    m_shooterL.set(speed);
-    m_shooterR.set(speed);
+    m_shooterL.set(-speed);
+    m_shooterR.set(-speed);
   }
 
   public void stopMotor(){
