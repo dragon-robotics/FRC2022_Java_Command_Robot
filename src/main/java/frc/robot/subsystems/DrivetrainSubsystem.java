@@ -105,7 +105,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     m_odometry.update(
-        m_gyro.getRotation2d(), getDistance(m_talonLeftLead), -getDistance(m_talonRightLead));
+        m_gyro.getRotation2d(), getDistance(m_talonLeftLead), getDistance(m_talonRightLead));
 
     // Added code to record X and Y odometry data //
     var translation = m_odometry.getPoseMeters().getTranslation();
@@ -121,7 +121,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     // Output encoder values converted to distance //
     m_leftEncoderDistanceEntry.setDouble(getDistance(m_talonLeftLead));
-    m_rightEncoderDistanceEntry.setDouble(-getDistance(m_talonRightLead));
+    m_rightEncoderDistanceEntry.setDouble(getDistance(m_talonRightLead));
 
     // Output raw encoder velocity values //
     m_leftEncoderVelocityEntry.setDouble(m_talonLeftLead.getSelectedSensorVelocity());
