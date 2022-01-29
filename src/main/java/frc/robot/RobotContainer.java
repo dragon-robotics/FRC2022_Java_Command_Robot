@@ -51,7 +51,6 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    // m_intakeSubsystem.setDefaultCommand(getIntakeCommand());
     // Configure the button bindings
     configureButtonBindings();
     
@@ -86,12 +85,6 @@ public class RobotContainer {
       () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
     );
   }
-
-  // public Command getIntakeCommand() {
-  //   return new IntakeCommand(
-
-  //   )
-  // }
 
   public Command getRamseteCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
