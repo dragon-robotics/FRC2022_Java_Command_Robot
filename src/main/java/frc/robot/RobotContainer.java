@@ -21,8 +21,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.PneumaticsCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -38,10 +40,12 @@ public class RobotContainer {
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final PneumaticsSubsystem m_pneumaticsSubsystem = new PneumaticsSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   private final JoystickButton m_intakeButton = new JoystickButton(m_driverController, Constants.BTN_B);
+  private final JoystickButton m_pneumaticsButton = new JoystickButton(m_driverController, Constants.BTN_X);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Auto-Only Commands //
@@ -64,6 +68,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem));
+    m_pneumaticsButton.whileHeld(new PneumaticsCommand(m_pneumaticsSubsystem));
   }
 
   /**
