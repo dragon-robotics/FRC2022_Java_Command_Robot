@@ -9,16 +9,33 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-CANSparkMax m_intakeL = new CANSparkMax(1, MotorType.kBrushless);
-
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
-  public IntakeSubsystem() {
 
+  CANSparkMax m_intakeL = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax m_intakeR = new CANSparkMax(1, MotorType.kBrushless);
+
+  public IntakeSubsystem() {
+    m_intakeR.setInverted(true);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  }
+
+  public void intake() {
+    m_intakeL.set(0.1);
+    m_intakeR.set(0.1);
+  }
+
+  public void intake(double speed) {
+    m_intakeL.set(speed);
+    m_intakeR.set(speed);
+  }
+
+  public void stopMotor() {
+    m_intakeL.set(0);
+    m_intakeR.set(0);
   }
 }
