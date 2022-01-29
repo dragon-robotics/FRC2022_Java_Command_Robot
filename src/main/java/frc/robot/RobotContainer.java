@@ -20,10 +20,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,6 +41,7 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
+  private final JoystickButton m_intakeButton = new JoystickButton(m_driverController, Constants.BTN_B);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Auto-Only Commands //
@@ -48,9 +51,10 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-
+    // m_intakeSubsystem.setDefaultCommand(getIntakeCommand());
     // Configure the button bindings
     configureButtonBindings();
+    
   }
 
   /**
@@ -59,7 +63,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -80,6 +86,12 @@ public class RobotContainer {
       () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
     );
   }
+
+  // public Command getIntakeCommand() {
+  //   return new IntakeCommand(
+
+  //   )
+  // }
 
   public Command getRamseteCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
