@@ -41,16 +41,17 @@ public final class Constants {
     public static final int BTN_STICK_RIGHT = 10;
 
     // Robot Measurement Constants //
-    public static final double TRACK_WIDTH_METERS = 0.555;
+    public static final double TRACK_WIDTH_METERS = 0.546;
     public static final double WHEEL_DIAMETER_METERS = 0.1524;
     public static final double GEAR_RATIO = 10.71;
     public static final double WHEEL_RADIUS_METERS = WHEEL_DIAMETER_METERS / 2;
-    public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI * WHEEL_DIAMETER_METERS;
+    public static final double WHEEL_CIRCUMFERENCE_METERS =
+        Math.PI * WHEEL_DIAMETER_METERS;
 
     // Encoder Constants //
     public static final int ENCODER_CPR = 2048;
     public static final double ENCODER_DISTANCE_PER_PULSE = 
-        (WHEEL_DIAMETER_METERS * Math.PI) / ((double) ENCODER_CPR * GEAR_RATIO);
+        (WHEEL_CIRCUMFERENCE_METERS) / ((double) ENCODER_CPR * GEAR_RATIO);
 
     // Differential Drive Kinematics //
     public static final DifferentialDriveKinematics DIFF_DRIVE_KINEMATICS =
@@ -64,12 +65,12 @@ public final class Constants {
     public static final double kPDriveVel = 1.9925;
 
     // DifferentialDriveKinematics //
-    public static final double kTrackwidthMeters = 0.555;
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final DifferentialDriveKinematics kDriveKinematics =
+        new DifferentialDriveKinematics(TRACK_WIDTH_METERS);
 
     // Max Trajectory Velocity/Acceleration //
-    public static final double kMaxSpeedMetersPerSecond = 0.8;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.8;
+    public static final double kMaxSpeedMetersPerSecond = 1;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1;
 
     // Ramsete Parameters //
     public static final double kRamseteB = 2;
