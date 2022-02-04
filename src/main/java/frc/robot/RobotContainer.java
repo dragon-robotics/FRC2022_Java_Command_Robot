@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -15,7 +17,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -41,11 +45,59 @@ public class RobotContainer {
 
   // Auto-Only Commands //
 
+  // Store our overall trajectory //
+  Trajectory trajectory = new Trajectory();
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    String fourBallAutoTraj1Json = "Four-Ball-Auto-Pt1.wpilib.json";
+    String fourBallAutoTraj2Json = "Four-Ball-Auto-Pt2.wpilib.json";
+    String fourBallAutoTraj3Json = "Four-Ball-Auto-Pt3.wpilib.json";
+    String fourBallAutoTraj4Json = "Four-Ball-Auto-Pt4.wpilib.json";
+
+    String FiveBallAutoTraj1Json = "Five-Ball-Auto-Pt1.wpilib.json";
+    String FiveBallAutoTraj2Json = "Five-Ball-Auto-Pt2.wpilib.json";
+    String FiveBallAutoTraj3Json = "Five-Ball-Auto-Pt3.wpilib.json";
+    String FiveBallAutoTraj4Json = "Five-Ball-Auto-Pt4.wpilib.json";
+    String FiveBallAutoTraj5Json = "Five-Ball-Auto-Pt5.wpilib.json";
+
+    String FiveBallAuto2Traj1Json = "Five-Ball-Auto-2-Pt1.wpilib.json";
+    String FiveBallAuto2Traj2Json = "Five-Ball-Auto-2-Pt2.wpilib.json";
+
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+
+    try {
+      // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj1Json);
+      // Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj2Json);
+      // Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj3Json);
+      // Trajectory traj3 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // Trajectory tempTrajectory = traj1.concatenate(traj2);
+      // trajectory = tempTrajectory.concatenate(traj3);
+
+      // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj1Json);
+      // Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj2Json);
+      // Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj3Json);
+      // Trajectory traj3 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj4Json);
+      // Trajectory traj4 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj5Json);
+      // Trajectory traj5 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAuto2Traj1Json);
+      Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+      trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAuto2Traj2Json);
+      Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+
+      trajectory = traj1.concatenate(traj2);
+    } catch (IOException ex) {
+
+    }
 
     // Configure the button bindings
     configureButtonBindings();
@@ -129,7 +181,8 @@ public class RobotContainer {
     );
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-      exampleTrajectory,
+      // exampleTrajectory,
+      trajectory,
       m_drivetrainSubsystem::getPose,
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
       new SimpleMotorFeedforward(
@@ -146,7 +199,7 @@ public class RobotContainer {
     );
 
     // Reset odometry to the starting pose of the trajectory.
-    m_drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
+    m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drivetrainSubsystem.tankDriveVolts(0, 0));
