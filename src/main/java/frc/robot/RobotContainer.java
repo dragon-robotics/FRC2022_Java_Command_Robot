@@ -16,15 +16,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.PneumaticsCommand;
+import frc.robot.commands.IntakeCompressorCommand;
+import frc.robot.commands.IntakeMotorCommand;
+import frc.robot.commands.IntakePistonExtend;
+import frc.robot.commands.IntakePistonRetract;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PneumaticsSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,14 +43,15 @@ public class RobotContainer {
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  private final PneumaticsSubsystem m_pneumaticsSubsystem = new PneumaticsSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  private final JoystickButton m_intakeButton = new JoystickButton(m_driverController, Constants.BTN_B);
-  private final JoystickButton m_pneumaticsButton = new JoystickButton(m_driverController, Constants.BTN_X);
+  private final JoystickButton m_intakeMotorButton = new JoystickButton(m_driverController, Constants.BTN_B);
+  private final JoystickButton m_intakePneumaticsButton = new JoystickButton(m_driverController, Constants.BTN_X);
+  private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
+  // Pneumatics compressor
   // Auto-Only Commands //
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,6 +59,7 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+    m_intakeSubsystem.setDefaultCommand(getIntakePistonRetract());
     // Configure the button bindings
     configureButtonBindings();
     
@@ -67,8 +72,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_intakeButton.whileHeld(new IntakeCommand(m_intakeSubsystem));
-    m_pneumaticsButton.whileHeld(new PneumaticsCommand(m_pneumaticsSubsystem));
+    m_intakeMotorButton.whileHeld(new IntakeMotorCommand(m_intakeSubsystem));
+    m_intakePneumaticsButton.whileHeld(new IntakePistonExtend(m_intakeSubsystem));
+    m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
   }
 
   /**
@@ -89,6 +95,10 @@ public class RobotContainer {
       () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
       () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
     );
+  }
+
+  public Command getIntakePistonRetract() {
+    return new IntakePistonRetract(m_intakeSubsystem);
   }
 
   public Command getRamseteCommand() {
