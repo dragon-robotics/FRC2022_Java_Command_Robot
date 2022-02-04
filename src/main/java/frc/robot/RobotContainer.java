@@ -4,25 +4,19 @@
 
 package frc.robot;
 
-import java.util.List;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.Auto.FourBallHighGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,13 +33,20 @@ public class RobotContainer {
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // Auto-Only Commands //
+  // Create the auto loader class to load everything for us //
+
+  // Create SmartDashboard chooser for autonomous routines
+  private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+
+    // Load all wpilib.json trajectory files into the Roborio to speed up auto
+    // deployment //
+    GenerateTrajectory.loadTrajectories();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -66,8 +67,19 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    return getRamseteCommand();
+    AutoCommand command = m_autoLoader.getSelected();
+
+    switch (command) {
+      case NONE:
+        return null;
+      case EXAMPLE_TRAJECTORY:
+        return getRamseteCommand();
+      case FOUR_BALL_HIGH_GOAL:
+        return new FourBallHighGoalCommand(
+            m_drivetrainSubsystem, command);
+      default:
+        return null;
+    }
   }
 
   public Command getArcadeDriveCommand(){
@@ -80,53 +92,8 @@ public class RobotContainer {
   }
 
   public Command getRamseteCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-      new SimpleMotorFeedforward(
-          Constants.ksVolts,
-          Constants.kvVoltSecondsPerMeter,
-          Constants.kaVoltSecondsSquaredPerMeter),
-      Constants.kDriveKinematics,
-      10
-    );
-
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-      Constants.kMaxSpeedMetersPerSecond,
-      Constants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(Constants.kDriveKinematics)
-        // Apply the voltage constraint
-        .addConstraint(autoVoltageConstraint);
-
     // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //   // Start at the origin facing the +X direction
-    //   new Pose2d(0, 0, new Rotation2d(0)),
-    //   // Pass through these two interior waypoints, making an 's' curve path
-    //   List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //   // End 3 meters straight ahead of where we started, facing forward
-    //   new Pose2d(3, 0, new Rotation2d(0)),
-    //   // Pass config
-    //   config
-    // );
-
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-      // Start at the origin facing the +X direction
-      new Pose2d(0, 0, new Rotation2d(0)),
-      // Pass through these two interior waypoints, making an 's' curve path
-      List.of(
-        new Translation2d(1, 2),
-        new Translation2d(3, 1),
-        new Translation2d(2, 0),
-        new Translation2d(3, -1),
-        new Translation2d(1, -2)
-      ),
-      // End 3 meters straight ahead of where we started, facing forward
-      new Pose2d(0, 0, new Rotation2d(Math.toRadians(-180))),
-      // Pass config
-      config
-    );
+    Trajectory exampleTrajectory = GenerateTrajectory.getTrajectory(AutoCommand.EXAMPLE_TRAJECTORY).get(0);
 
     RamseteCommand ramseteCommand = new RamseteCommand(
       exampleTrajectory,
