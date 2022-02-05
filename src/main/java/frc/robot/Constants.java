@@ -49,9 +49,14 @@ public final class Constants {
         Math.PI * WHEEL_DIAMETER_METERS;
 
     // Encoder Constants //
-    public static final int ENCODER_CPR = 2048;
+    public static final int ENCODER_SAMPLES_PER_AVG = 10;
+    public static final int[] LEFT_ENCODER_PORTS = new int[]{0, 1};
+    public static final boolean LEFT_ENCODER_REVERSED = false;
+    public static final int[] RIGHT_ENCODER_PORTS = new int[] { 2, 3 };
+    public static final boolean RIGHT_ENCODER_REVERSED = true;
+    public static final int ENCODER_CPR = 8192;
     public static final double ENCODER_DISTANCE_PER_PULSE = 
-        (WHEEL_CIRCUMFERENCE_METERS) / ((double) ENCODER_CPR * GEAR_RATIO);
+        (WHEEL_CIRCUMFERENCE_METERS) / ((double) ENCODER_CPR);
 
     // Differential Drive Kinematics //
     public static final DifferentialDriveKinematics DIFF_DRIVE_KINEMATICS =
