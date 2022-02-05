@@ -19,10 +19,10 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
 
   CANSparkMax m_intakeL = new CANSparkMax(1, MotorType.kBrushless);
-  CANSparkMax m_intakeR = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax m_intakeR = new CANSparkMax(2, MotorType.kBrushless);
 
-  DoubleSolenoid m_doublePCM6 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
-  DoubleSolenoid m_doublePCM7 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 1, 2);
+  DoubleSolenoid m_doublePCM1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
+  DoubleSolenoid m_doublePCM2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
 
   Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
@@ -48,17 +48,21 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Intake pneumatics commands
   public void pneumaticsExtend() {
-    m_doublePCM6.set(kForward);
-    m_doublePCM7.set(kForward);
+    m_doublePCM1.set(kForward);
+    m_doublePCM2.set(kForward);
+
   }
 
   public void pneumaticsRetract() {
-    m_doublePCM6.set(kOff);
-    m_doublePCM7.set(kOff);
+    m_doublePCM1.set(kReverse);
+    m_doublePCM2.set(kReverse);
+
   }
 
-  public void compressorRun(){
-    pcmCompressor.enableDigital();
+  public void pneumaticsNeutral() {
+    m_doublePCM1.set(kOff);
+    m_doublePCM2.set(kOff);
+
   }
 
   public void compressorEnd() {

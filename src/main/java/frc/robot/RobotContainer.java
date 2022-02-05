@@ -23,12 +23,15 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCompressorCommand;
-import frc.robot.commands.IntakeMotorCommand;
-import frc.robot.commands.IntakePistonExtend;
-import frc.robot.commands.IntakePistonRetract;
+import frc.robot.commands.IntakeMotorOffCommand;
+import frc.robot.commands.IntakeMotorOnCommand;
+import frc.robot.commands.IntakePistonExtendCommand;
+import frc.robot.commands.IntakePistonNeutralCommand;
+import frc.robot.commands.IntakePistonRetractCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -46,12 +49,38 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  private final JoystickButton m_intakeMotorButton = new JoystickButton(m_driverController, Constants.BTN_B);
-  private final JoystickButton m_intakePneumaticsButton = new JoystickButton(m_driverController, Constants.BTN_X);
+  private final JoystickButton m_intakeNeutralButton = new JoystickButton(m_driverController, Constants.BTN_A);
+  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
+  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
   private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // Pneumatics compressor
+  // public class ExtendIntake extends ParallelCommandGroup {
+  //   public ExtendIntake(IntakeSubsystem intake) {
+  //     addCommands(
+  //       new IntakeMotorOnCommand(intake),
+  //       new IntakePistonExtendCommand(intake)
+  //     );
+  //   }
+  // }
+
+  // public class RetractIntake extends ParallelCommandGroup {
+  //   public RetractIntake(IntakeSubsystem intake) {
+  //     addCommands(
+  //       new IntakeMotorOffCommand(intake),
+  //       new IntakePistonRetractCommand(intake)
+  //     );
+  //   }
+  // }
+
+  // public class NeutralIntake extends ParallelCommandGroup {
+  //   public NeutralIntake(IntakeSubsystem intake) {
+  //     addCommands(
+  //       new IntakeMotorOffCommand(intake),
+  //       new IntakePistonNeutralCommand(intake)
+  //     );
+  //   }
+  // }
   // Auto-Only Commands //
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -59,7 +88,7 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_intakeSubsystem.setDefaultCommand(getIntakePistonRetract());
+    m_intakeSubsystem.setDefaultCommand(getNeutralIntakeCommand());
     // Configure the button bindings
     configureButtonBindings();
     
@@ -72,8 +101,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_intakeMotorButton.whileHeld(new IntakeMotorCommand(m_intakeSubsystem));
-    m_intakePneumaticsButton.whileHeld(new IntakePistonExtend(m_intakeSubsystem));
+    // m_intakeNeutralButton.whileHeld(new NeutralIntake(m_intakeSubsystem));
+    m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
+    m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
     m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
   }
 
@@ -97,9 +127,11 @@ public class RobotContainer {
     );
   }
 
-  public Command getIntakePistonRetract() {
-    return new IntakePistonRetract(m_intakeSubsystem);
+  public Command getNeutralIntakeCommand() {
+    return new IntakePistonNeutralCommand(m_intakeSubsystem);
   }
+
+
 
   public Command getRamseteCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
