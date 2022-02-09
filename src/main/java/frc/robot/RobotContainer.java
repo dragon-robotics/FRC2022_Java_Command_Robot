@@ -24,7 +24,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.UptakeMotorCommand;
+import frc.robot.commands.UptakeMotorOffCommand;
+import frc.robot.commands.UptakeMotorOnCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -72,7 +73,7 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_uptakeSubsystem.setDefaultCommand(getUptakeMotorCommand());
+    m_uptakeSubsystem.setDefaultCommand(getUptakeMotorOffCommand());
 
     try {
       // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj1Json);
@@ -116,7 +117,7 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_uptakeButton.whenHeld(getUptakeMotorCommand());
+    m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
   }
 
   /**
@@ -129,8 +130,8 @@ public class RobotContainer {
     // return m_autoCommand;
     return getRamseteCommand();
   }
-  public Command getUptakeMotorCommand() {
-  return new UptakeMotorCommand(m_uptakeSubsystem);
+  public Command getUptakeMotorOffCommand() {
+  return new UptakeMotorOffCommand(m_uptakeSubsystem);
   }
 
   public Command getArcadeDriveCommand(){
