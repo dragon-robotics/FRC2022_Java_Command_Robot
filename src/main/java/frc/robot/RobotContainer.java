@@ -24,9 +24,12 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.UptakeMotorCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.UptakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,9 +41,11 @@ public class RobotContainer {
 
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
+  private final JoystickButton m_uptakeButton = new JoystickButton(m_driverController, Constants.BTN_A);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Auto-Only Commands //
@@ -67,6 +72,7 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+    m_uptakeSubsystem.setDefaultCommand(getUptakeMotorCommand());
 
     try {
       // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj1Json);
@@ -109,7 +115,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_uptakeButton.whenHeld(getUptakeMotorCommand());
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -120,6 +128,9 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     // return m_autoCommand;
     return getRamseteCommand();
+  }
+  public Command getUptakeMotorCommand() {
+  return new UptakeMotorCommand(m_uptakeSubsystem);
   }
 
   public Command getArcadeDriveCommand(){
