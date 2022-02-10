@@ -1,36 +1,41 @@
 {
-  "counts per rotation": 2048.0,
-  "encoder type": "Built-in",
-  "encoding": false,
+  "counts per rotation": 8192.0,
+  "encoder type": "roboRIO quadrature",
+  "encoding": true,
   "gearing denominator": 1.0,
-  "gearing numerator": 10.71,
+  "gearing numerator": 1.0,
   "gyro": "NavX",
   "gyro ctor": "SerialPort.kMXP",
   "is drivetrain": true,
   "motor controllers": [
-    "TalonFX"
+    "TalonFX",
+    "PWM"
   ],
-  "number of samples per average": 1,
+  "number of samples per average": 10,
   "primary encoder inverted": false,
   "primary encoder ports": [
     0,
     1
   ],
   "primary motor ports": [
+    2,
     1
   ],
   "primary motors inverted": [
+    false,
     false
   ],
-  "secondary encoder inverted": false,
+  "secondary encoder inverted": true,
   "secondary encoder ports": [
     2,
     3
   ],
   "secondary motor ports": [
+    4,
     3
   ],
   "secondary motors inverted": [
+    true,
     true
   ],
   "velocity measurement period": 100

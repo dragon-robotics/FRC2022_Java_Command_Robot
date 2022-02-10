@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
@@ -132,16 +131,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_angleEntry.setDouble(degree);
 
     // Output raw encoder values //
-    m_leftEncoderEntry.setDouble(m_talonLeftLead.getSelectedSensorPosition());
-    m_rightEncoderEntry.setDouble(m_talonRightLead.getSelectedSensorPosition());
+    m_leftEncoderEntry.setDouble(m_leftEncoder.get());
+    m_rightEncoderEntry.setDouble(m_rightEncoder.get());
 
     // Output encoder values converted to distance //
     m_leftEncoderDistanceEntry.setDouble(m_leftEncoder.getDistance());
     m_rightEncoderDistanceEntry.setDouble(m_rightEncoder.getDistance());
 
     // Output raw encoder velocity values //
-    m_leftEncoderVelocityEntry.setDouble(m_talonLeftLead.getSelectedSensorVelocity());
-    m_rightEncoderVelocityEntry.setDouble(m_talonRightLead.getSelectedSensorVelocity());
+    m_leftEncoderVelocityEntry.setDouble(m_leftEncoder.getRate());
+    m_rightEncoderVelocityEntry.setDouble(m_rightEncoder.getRate());
 
     // Output raw wheel speed values //
     m_leftEncoderWheelSpeedEntry.setDouble(getWheelSpeeds().leftMetersPerSecond);
