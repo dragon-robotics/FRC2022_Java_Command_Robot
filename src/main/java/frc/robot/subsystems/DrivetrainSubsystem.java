@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -52,6 +53,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
   NetworkTableEntry m_rightEncoderVelocityEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder Velocity");
   NetworkTableEntry m_leftEncoderWheelSpeedEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Left Encoder Wheel Speed");
   NetworkTableEntry m_rightEncoderWheelSpeedEntry = NetworkTableInstance.getDefault().getTable("troubleshooting").getEntry("Right Encoder Wheel Speed");
+
+  private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
   /** Creates a new Drivetrain. */
   public DrivetrainSubsystem() {
@@ -130,6 +133,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // Output raw wheel speed values //
     m_leftEncoderWheelSpeedEntry.setDouble(getWheelSpeeds().leftMetersPerSecond);
     m_rightEncoderWheelSpeedEntry.setDouble(getWheelSpeeds().rightMetersPerSecond);
+
+    SmartDashboard.putNumber("Robot Heading", m_drivetrainSubsystem.getHeading());
+    SmartDashboard.putNumber("X Pose", translation.getX());
+    SmartDashboard.putNumber("Y Pose", translation.getY()); 
+    SmartDashboard.putNumber("Left Encoder Distance", getDistance(m_talonLeftLead));
+    SmartDashboard.putNumber("Right Encoder Distance", getDistance(m_talonRightLead));
+    SmartDashboard.putNumber("Left Encoder Velocity", m_talonLeftLead.getSelectedSensorVelocity());
+    SmartDashboard.putNumber("Right Encoder Velocity", m_talonRightLead.getSelectedSensorVelocity());
 
   }
 
