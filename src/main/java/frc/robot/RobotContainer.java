@@ -53,6 +53,9 @@ public class RobotContainer {
   private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
   private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
   private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
+  private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
+  private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_driverController, Constants.BUMPER_RIGHT);
+  
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // public class ExtendIntake extends ParallelCommandGroup {
@@ -105,6 +108,8 @@ public class RobotContainer {
     m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
     m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
     m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
+    m_intakeMotorOnButton.whileHeld(new IntakeMotorOnCommand(m_intakeSubsystem));
+    m_intakeMotorOffButton.whileHeld(new IntakeMotorOffCommand(m_intakeSubsystem));
   }
 
   /**
