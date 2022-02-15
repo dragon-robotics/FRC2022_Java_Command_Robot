@@ -25,6 +25,7 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCompressorCommand;
 import frc.robot.commands.IntakeMotorOffCommand;
 import frc.robot.commands.IntakeMotorOnCommand;
+import frc.robot.commands.IntakeMotorVariableCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
 import frc.robot.commands.IntakePistonRetractCommand;
@@ -33,6 +34,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -53,34 +55,9 @@ public class RobotContainer {
   private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
   private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
   private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
+  private final JoystickButton m_intakeEngageButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // public class ExtendIntake extends ParallelCommandGroup {
-  //   public ExtendIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOnCommand(intake),
-  //       new IntakePistonExtendCommand(intake)
-  //     );
-  //   }
-  // }
-
-  // public class RetractIntake extends ParallelCommandGroup {
-  //   public RetractIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOffCommand(intake),
-  //       new IntakePistonRetractCommand(intake)
-  //     );
-  //   }
-  // }
-
-  // public class NeutralIntake extends ParallelCommandGroup {
-  //   public NeutralIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOffCommand(intake),
-  //       new IntakePistonNeutralCommand(intake)
-  //     );
-  //   }
-  // }
   // Auto-Only Commands //
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -116,6 +93,21 @@ public class RobotContainer {
     m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
     m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
     m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
+    
+    m_intakeEngageButton.whenHeld(new IntakeMotorVariableCommand(
+        m_intakeSubsystem,
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+      )
+    );
+
+    m_intakeEngageButton.toggleWhenPressed(new StartEndCommand(
+        // Engage => Start motor and extend solenoid
+        () -> { m_intakeSubsystem.engageMotor(); m_intakeSubsystem.pneumaticsRetract(); },
+        // Disengage => Stop motor and retract solenoid
+        () -> { m_intakeSubsystem.stopMotor(); m_intakeSubsystem.pneumaticsNeutral(); },
+        m_intakeSubsystem
+      )
+    );
   }
 
   /**
