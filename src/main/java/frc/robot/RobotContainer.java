@@ -87,8 +87,19 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_intakeSubsystem.setDefaultCommand(getNeutralIntakeCommand());
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+      )
+    );
+    
+    // Set default intake to have neutral motor and intake //
+    m_intakeSubsystem.setDefaultCommand(
+      new IntakePistonNeutralCommand(m_intakeSubsystem)
+    );
+
     // Configure the button bindings
     configureButtonBindings();
     
@@ -116,15 +127,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     // return m_autoCommand;
     return getRamseteCommand();
-  }
-
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
   }
 
   public Command getNeutralIntakeCommand() {
