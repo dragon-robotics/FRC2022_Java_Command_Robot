@@ -25,6 +25,7 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCompressorCommand;
 import frc.robot.commands.IntakeMotorOffCommand;
 import frc.robot.commands.IntakeMotorOnCommand;
+import frc.robot.commands.IntakeMotorVariedCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
 import frc.robot.commands.IntakePistonRetractCommand;
@@ -91,7 +92,7 @@ public class RobotContainer {
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_intakeSubsystem.setDefaultCommand(getNeutralIntakeCommand());
+    m_intakeSubsystem.setDefaultCommand(getVariedMotorCommand());
     // Configure the button bindings
     configureButtonBindings();
     
@@ -136,7 +137,12 @@ public class RobotContainer {
     return new IntakePistonNeutralCommand(m_intakeSubsystem);
   }
 
-
+  public Command getVariedMotorCommand() {
+    return new IntakeMotorVariedCommand(
+      m_intakeSubsystem,
+      () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+    );
+  }
 
   public Command getRamseteCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
