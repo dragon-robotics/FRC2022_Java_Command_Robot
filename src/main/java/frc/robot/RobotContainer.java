@@ -51,8 +51,20 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_shooterSubsystem.setDefaultCommand(getVariableShootCommand());
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+      )
+    );
+
+    m_shooterSubsystem.setDefaultCommand(
+      new VariableShootCommand(
+        m_shooterSubsystem,
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_RIGHT)
+      )
+    );
 
     // Configure the button bindings
     configureButtonBindings();
@@ -77,22 +89,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     // return m_autoCommand;
     return getRamseteCommand();
-  }
-
-  public Command getVariableShootCommand(){
-    return new VariableShootCommand(
-      m_shooterSubsystem,
-      () -> m_driverController.getRawAxis(Constants.TRIGGER_RIGHT)
-    );
-  }
-
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
   }
 
   public Command getRamseteCommand() {
