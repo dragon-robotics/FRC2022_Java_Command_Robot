@@ -25,11 +25,8 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCompressorCommand;
 import frc.robot.commands.IntakeMotorOffCommand;
 import frc.robot.commands.IntakeMotorOnCommand;
-<<<<<<< HEAD
-import frc.robot.commands.IntakeMotorVariedCommand;
-=======
 import frc.robot.commands.IntakeMotorVariableCommand;
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
+import frc.robot.commands.IntakeMotorVariedCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
 import frc.robot.commands.IntakePistonRetractCommand;
@@ -59,13 +56,7 @@ public class RobotContainer {
   private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
   private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
   private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
-<<<<<<< HEAD
-  private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
-  private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_driverController, Constants.BUMPER_RIGHT);
-  
-=======
   private final JoystickButton m_intakeEngageButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Auto-Only Commands //
@@ -74,10 +65,6 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-<<<<<<< HEAD
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
-    m_intakeSubsystem.setDefaultCommand(getVariedMotorCommand());
-=======
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
@@ -91,7 +78,6 @@ public class RobotContainer {
       new IntakePistonNeutralCommand(m_intakeSubsystem)
     );
 
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
     // Configure the button bindings
     configureButtonBindings();
     
@@ -108,10 +94,6 @@ public class RobotContainer {
     m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
     m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
     m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
-<<<<<<< HEAD
-    m_intakeMotorOnButton.whileHeld(new IntakeMotorOnCommand(m_intakeSubsystem));
-    m_intakeMotorOffButton.whileHeld(new IntakeMotorOffCommand(m_intakeSubsystem));
-=======
     
     m_intakeEngageButton.whenHeld(new IntakeMotorVariableCommand(
         m_intakeSubsystem,
@@ -127,7 +109,6 @@ public class RobotContainer {
         m_intakeSubsystem
       )
     );
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
   }
 
   /**

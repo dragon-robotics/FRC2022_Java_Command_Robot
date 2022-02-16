@@ -19,10 +19,10 @@ public class IntakeMotorVariedCommand extends CommandBase {
     IntakeSubsystem intake,
     Supplier<Double> speed
   ) {
-    // Use addRequirements() here to declare subsystem dependencies.
     m_intake = intake;
     m_speed = speed;
-
+  
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
 

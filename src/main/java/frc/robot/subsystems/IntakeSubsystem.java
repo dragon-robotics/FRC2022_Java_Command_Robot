@@ -18,26 +18,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
 
-<<<<<<< HEAD
-  // CANSparkMax m_intakeL = new CANSparkMax(1, MotorType.kBrushless);
-  // CANSparkMax m_intakeR = new CANSparkMax(2, MotorType.kBrushless);
-  CANSparkMax m_intake = new CANSparkMax(4, MotorType.kBrushless);
-=======
   CANSparkMax m_intakeMotor = new CANSparkMax(1, MotorType.kBrushless);
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
 
   DoubleSolenoid m_doublePCM1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
   DoubleSolenoid m_doublePCM2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
 
   Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
-<<<<<<< HEAD
-  public IntakeSubsystem() {
-    // m_intakeR.setInverted(true);
-  }
-=======
   public IntakeSubsystem() {}
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
 
   @Override
   public void periodic() {
@@ -45,25 +33,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void variedMotor(double motorSpeed) {
-    m_intake.set(motorSpeed);
+    m_intakeMotor.set(motorSpeed);
   }
 
   // Intake motor commands
   public void engageMotor() {
-<<<<<<< HEAD
-    // m_intakeL.set(0.1);
-    // m_intakeR.set(0.1);
-
-    m_intake.set(0.1);
-
-  }
-
-  public void stopMotor() {
-    // m_intakeL.set(0);
-    // m_intakeR.set(0);
-
-    m_intake.set(0);
-=======
     m_intakeMotor.set(0.1);
   }
 
@@ -73,7 +47,6 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void variableMotor(double speed){
     m_intakeMotor.set(speed);
->>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
   }
 
   // Intake pneumatics commands
