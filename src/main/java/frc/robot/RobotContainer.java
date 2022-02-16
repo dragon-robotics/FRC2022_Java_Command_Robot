@@ -25,7 +25,11 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.IntakeCompressorCommand;
 import frc.robot.commands.IntakeMotorOffCommand;
 import frc.robot.commands.IntakeMotorOnCommand;
+<<<<<<< HEAD
 import frc.robot.commands.IntakeMotorVariedCommand;
+=======
+import frc.robot.commands.IntakeMotorVariableCommand;
+>>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
 import frc.robot.commands.IntakePistonRetractCommand;
@@ -34,6 +38,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
@@ -54,45 +59,39 @@ public class RobotContainer {
   private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
   private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
   private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
+<<<<<<< HEAD
   private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
   private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_driverController, Constants.BUMPER_RIGHT);
   
+=======
+  private final JoystickButton m_intakeEngageButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
+>>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
   // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // public class ExtendIntake extends ParallelCommandGroup {
-  //   public ExtendIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOnCommand(intake),
-  //       new IntakePistonExtendCommand(intake)
-  //     );
-  //   }
-  // }
-
-  // public class RetractIntake extends ParallelCommandGroup {
-  //   public RetractIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOffCommand(intake),
-  //       new IntakePistonRetractCommand(intake)
-  //     );
-  //   }
-  // }
-
-  // public class NeutralIntake extends ParallelCommandGroup {
-  //   public NeutralIntake(IntakeSubsystem intake) {
-  //     addCommands(
-  //       new IntakeMotorOffCommand(intake),
-  //       new IntakePistonNeutralCommand(intake)
-  //     );
-  //   }
-  // }
   // Auto-Only Commands //
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
+<<<<<<< HEAD
     m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
     m_intakeSubsystem.setDefaultCommand(getVariedMotorCommand());
+=======
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+      )
+    );
+    
+    // Set default intake to have neutral motor and intake //
+    m_intakeSubsystem.setDefaultCommand(
+      new IntakePistonNeutralCommand(m_intakeSubsystem)
+    );
+
+>>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
     // Configure the button bindings
     configureButtonBindings();
     
@@ -109,8 +108,26 @@ public class RobotContainer {
     m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
     m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
     m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
+<<<<<<< HEAD
     m_intakeMotorOnButton.whileHeld(new IntakeMotorOnCommand(m_intakeSubsystem));
     m_intakeMotorOffButton.whileHeld(new IntakeMotorOffCommand(m_intakeSubsystem));
+=======
+    
+    m_intakeEngageButton.whenHeld(new IntakeMotorVariableCommand(
+        m_intakeSubsystem,
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+      )
+    );
+
+    m_intakeEngageButton.toggleWhenPressed(new StartEndCommand(
+        // Engage => Start motor and extend solenoid
+        () -> { m_intakeSubsystem.engageMotor(); m_intakeSubsystem.pneumaticsRetract(); },
+        // Disengage => Stop motor and retract solenoid
+        () -> { m_intakeSubsystem.stopMotor(); m_intakeSubsystem.pneumaticsNeutral(); },
+        m_intakeSubsystem
+      )
+    );
+>>>>>>> fd4e64b74b1b573d9830206816e21aefdcbabd09
   }
 
   /**
@@ -122,15 +139,6 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
     // return m_autoCommand;
     return getRamseteCommand();
-  }
-
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
   }
 
   public Command getNeutralIntakeCommand() {
@@ -163,18 +171,6 @@ public class RobotContainer {
         .setKinematics(Constants.kDriveKinematics)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //   // Start at the origin facing the +X direction
-    //   new Pose2d(0, 0, new Rotation2d(0)),
-    //   // Pass through these two interior waypoints, making an 's' curve path
-    //   List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //   // End 3 meters straight ahead of where we started, facing forward
-    //   new Pose2d(3, 0, new Rotation2d(0)),
-    //   // Pass config
-    //   config
-    // );
 
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
