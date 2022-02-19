@@ -28,10 +28,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Declare subsystem attribute/components //
   
   // Motor Controllers //
-  WPI_TalonFX m_talonLeftLead = new WPI_TalonFX(2);
-  WPI_TalonFX m_talonLeftFollow = new WPI_TalonFX(1);
-  WPI_TalonFX m_talonRightLead = new WPI_TalonFX(4);
-  WPI_TalonFX m_talonRightFollow = new WPI_TalonFX(3);
+  WPI_TalonFX m_talonLeftLead = new WPI_TalonFX(Constants.TALONFX_LEFT_TOP);
+  WPI_TalonFX m_talonLeftFollow = new WPI_TalonFX(Constants.TALONFX_LEFT_BOTTOM);
+  WPI_TalonFX m_talonRightLead = new WPI_TalonFX(Constants.TALONFX_RIGHT_TOP);
+  WPI_TalonFX m_talonRightFollow = new WPI_TalonFX(Constants.TALONFX_RIGHT_BOTTOM);
   DifferentialDrive m_drive = new DifferentialDrive(m_talonLeftLead, m_talonRightLead);
   
   // Gyro - NavX //

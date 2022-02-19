@@ -16,7 +16,7 @@ import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
  */
 public final class Constants {
 
-    // Controller IDs, DRIVER = 0, OPERATOR = 1
+    // Joystick Controller IDs, DRIVER = 0, OPERATOR = 1
     public static final int DRIVER = 0;
     public static final int OPERATOR = 1;
 
@@ -39,6 +39,26 @@ public final class Constants {
     public static final int BTN_START = 8;
     public static final int BTN_STICK_LEFT = 9;
     public static final int BTN_STICK_RIGHT = 10;
+
+    // Motor ID Constants //
+    
+    // Drivetrain //
+    public static final int TALONFX_LEFT_TOP = 2;
+    public static final int TALONFX_LEFT_BOTTOM = 1;
+    public static final int TALONFX_RIGHT_TOP = 4;
+    public static final int TALONFX_RIGHT_BOTTOM = 3;
+
+    // Intake //
+    public static final int NEO_INTAKE = 3;
+    
+    // Uptake //
+    public static final int NEO_UPTAKE_1 = 4;
+    public static final int NEO_UPTAKE_2 = 5;
+    public static final int NEO_UPTAKE_3 = 6;
+
+    // Shooter //
+    public static final int NEO_SHOOTER_LEFT = 1;
+    public static final int NEO_SHOOTER_RIGHT = 2;
 
     // Robot Measurement Constants //
     public static final double TRACK_WIDTH_METERS = 0.546;
