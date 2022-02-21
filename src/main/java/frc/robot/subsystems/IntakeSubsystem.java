@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new IntakeSubsystem. */
 
-  CANSparkMax m_intakeMotor = new CANSparkMax(1, MotorType.kBrushless);
+  CANSparkMax m_intakeMotor = new CANSparkMax(2, MotorType.kBrushless);
 
   DoubleSolenoid m_doublePCM1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
   DoubleSolenoid m_doublePCM2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
@@ -68,7 +68,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   }
 
-  public void compressorEnd() {
+  public void compressorOff() {
     pcmCompressor.disable();
+  }
+  public void compressorOn(){
+    pcmCompressor.enableDigital();
   }
 }

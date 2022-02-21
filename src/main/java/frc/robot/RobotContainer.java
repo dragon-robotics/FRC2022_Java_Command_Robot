@@ -22,10 +22,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.IntakeCompressorCommand;
+import frc.robot.commands.IntakeCompressorOffCommand;
 import frc.robot.commands.IntakeMotorOffCommand;
 import frc.robot.commands.IntakeMotorOnCommand;
-import frc.robot.commands.IntakeMotorVariableCommand;
 import frc.robot.commands.IntakeMotorVariedCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
@@ -52,12 +51,15 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  private final JoystickButton m_intakeNeutralButton = new JoystickButton(m_driverController, Constants.BTN_A);
-  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_driverController, Constants.BTN_B);
-  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_driverController, Constants.BTN_X);
-  private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_driverController, Constants.BTN_Y);
-  private final JoystickButton m_intakeEngageButton = new JoystickButton(m_driverController, Constants.BUMPER_LEFT);
-  // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+    
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+
+  private final JoystickButton m_intakeNeutralButton = new JoystickButton(m_operatorController, Constants.BTN_A);
+  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_operatorController, Constants.BTN_B);
+  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_operatorController, Constants.BTN_X);
+  private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_operatorController, Constants.BTN_Y);
+  private final JoystickButton m_intakeEngageButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
+  private final JoystickButton m_intakeMotorVariedButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
 
   // Auto-Only Commands //
 
@@ -93,13 +95,16 @@ public class RobotContainer {
     // m_intakeNeutralButton.whileHeld(new NeutralIntake(m_intakeSubsystem));
     m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
     m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
-    m_intakeCompressorButton.whileHeld(new IntakeCompressorCommand(m_intakeSubsystem));
+    m_intakeCompressorButton.whileHeld(new IntakeCompressorOffCommand(m_intakeSubsystem));
     
-    m_intakeEngageButton.whenHeld(new IntakeMotorVariableCommand(
+    m_intakeMotorVariedButton.whenHeld(new IntakeMotorVariedCommand(
         m_intakeSubsystem,
         () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
       )
     );
+
+    // m_intakeMotorVariedButton.whenHeld(new IntakeMotorOnCommand(
+    //     m_intakeSubsystem));
 
     m_intakeEngageButton.toggleWhenPressed(new StartEndCommand(
         // Engage => Start motor and extend solenoid
