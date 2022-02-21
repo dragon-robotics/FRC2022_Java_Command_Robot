@@ -42,7 +42,13 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+      )
+    );
 
     // Load all wpilib.json trajectory files into the Roborio to speed up auto
     // deployment //
@@ -82,18 +88,42 @@ public class RobotContainer {
     }
   }
 
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
-  }
-
   public Command getRamseteCommand() {
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = GenerateTrajectory.getTrajectory(AutoCommand.EXAMPLE_TRAJECTORY).get(0);
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+      new SimpleMotorFeedforward(
+          Constants.ksVolts,
+          Constants.kvVoltSecondsPerMeter,
+          Constants.kaVoltSecondsSquaredPerMeter),
+      Constants.kDriveKinematics,
+      10
+    );
+
+    // Create config for trajectory
+    TrajectoryConfig config = new TrajectoryConfig(
+      Constants.kMaxSpeedMetersPerSecond,
+      Constants.kMaxAccelerationMetersPerSecondSquared)
+        // Add kinematics to ensure max speed is actually obeyed
+        .setKinematics(Constants.kDriveKinematics)
+        // Apply the voltage constraint
+        .addConstraint(autoVoltageConstraint);
+
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+      // Start at the origin facing the +X direction
+      new Pose2d(0, 0, new Rotation2d(0)),
+      // Pass through these two interior waypoints, making an 's' curve path
+      List.of(
+        new Translation2d(1, 2),
+        new Translation2d(3, 1),
+        new Translation2d(2, 0),
+        new Translation2d(3, -1),
+        new Translation2d(1, -2)
+      ),
+      // End 3 meters straight ahead of where we started, facing forward
+      new Pose2d(0, 0, new Rotation2d(Math.toRadians(-180))),
+      // Pass config
+      config
+    );
 
     RamseteCommand ramseteCommand = new RamseteCommand(
       exampleTrajectory,
