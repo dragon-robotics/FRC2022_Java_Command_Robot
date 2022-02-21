@@ -28,8 +28,8 @@ public class AutoLoader {
         TWO_BALL_BOT_LOW_GOAL,          // Picks up the lone ball from the bottom side and scores the low goal
         THREE_BALL_BOT_LEFT_LOW_GOAL,   // Picks up the one ball from the bottom left and score low
         THREE_BALL_BOT_LOW_GOAL,        // Picks up the one ball from the bottom and score low
-        FOUR_BALL_BOTTOM_LEFT_LOW_GOAL, // Picks up ball from bottom left, score 2 low, pick up 2 left ball, score 2 low
-        FOUR_BALL_BOTTOM_LOW_GOAL,      // Picks up ball from bottom, score 2 low, pick up 2 left ball, score 2 low
+        FOUR_BALL_BOT_LEFT_LOW_GOAL, // Picks up ball from bottom left, score 2 low, pick up 2 left ball, score 2 low
+        FOUR_BALL_BOT_LOW_GOAL,      // Picks up ball from bottom, score 2 low, pick up 2 left ball, score 2 low
         FIVE_BALL_LOW_GOAL,             // Score low, pick up bottom and the nearest left ball, score 2 low, pick up leftmost and human player ball, score 2 low
         // HIGH GOAL //
         ONE_BALL_TOP_HIGH_GOAL,         // Scores the 1 ball on the high goal from the top side of the tarmac
@@ -42,8 +42,8 @@ public class AutoLoader {
         TWO_BALL_BOT_HIGH_GOAL,         // Picks up the lone ball from the bottom side and scores the high goal
         THREE_BALL_BOT_LEFT_HIGH_GOAL,  // Picks up the one ball from the bottom left and score high
         THREE_BALL_BOT_HIGH_GOAL,       // Picks up the one ball from the bottom and score high
-        FOUR_BALL_BOTTOM_LEFT_HIGH_GOAL,// Picks up ball from bottom left, score 2 high, pick up 2 left ball, score 2 high
-        FOUR_BALL_BOTTOM_HIGH_GOAL,     // Picks up ball from bottom, score 2 high, pick up 2 left ball, score 2 high
+        FOUR_BALL_BOT_LEFT_HIGH_GOAL,// Picks up ball from bottom left, score 2 high, pick up 2 left ball, score 2 high
+        FOUR_BALL_BOT_HIGH_GOAL,     // Picks up ball from bottom, score 2 high, pick up 2 left ball, score 2 high
         FIVE_BALL_HIGH_GOAL             // Score high, pick up bottom and the nearest left ball, score 2 high, pick up leftmost and human player ball, score 2 high
     }
 
@@ -66,21 +66,15 @@ public class AutoLoader {
         m_autoChooser.addOption("Leave Tarmac", AutoCommand.LEAVE_TARMAC);
         m_autoChooser.addOption("One Ball Top Low Goal", AutoCommand.ONE_BALL_TOP_LOW_GOAL);
         m_autoChooser.addOption("One Ball Top Left Low Goal", AutoCommand.ONE_BALL_TOP_LEFT_LOW_GOAL);
-        m_autoChooser.addOption("One Ball Bottom Left Low Goal", AutoCommand.ONE_BALL_BOTTOM_LEFT_LOW_GOAL);
-        m_autoChooser.addOption("One Ball Bottom Low Goal", AutoCommand.ONE_BALL_BOTTOM_LOW_GOAL);
-        m_autoChooser.addOption("One Ball High Goal", AutoCommand.ONE_BALL_HIGH_GOAL);
-        m_autoChooser.addOption("Two Ball Top Side Low Goal", AutoCommand.TWO_BALL_TOP_SIDE_LOW_GOAL);
-        m_autoChooser.addOption("Two Ball Top Side High Goal", AutoCommand.TWO_BALL_TOP_SIDE_HIGH_GOAL);
-        m_autoChooser.addOption("Two Ball Bot Side Low Goal", AutoCommand.TWO_BALL_BOT_SIDE_LOW_GOAL);
-        m_autoChooser.addOption("Two Ball Bot Side High Goal", AutoCommand.TWO_BALL_BOT_SIDE_HIGH_GOAL);
-        m_autoChooser.addOption("Two Ball Left Side Low Goal", AutoCommand.TWO_BALL_LEFT_SIDE_LOW_GOAL);
-        m_autoChooser.addOption("Two Ball Left Side High Goal", AutoCommand.TWO_BALL_LEFT_SIDE_HIGH_GOAL);                
-        m_autoChooser.addOption("Three Ball Bot Side Low Goal", AutoCommand.THREE_BALL_BOT_SIDE_LOW_GOAL);
-        m_autoChooser.addOption("Three Ball Bot Side High Goal", AutoCommand.THREE_BALL_BOT_SIDE_HIGH_GOAL);
-        m_autoChooser.addOption("Four Ball Low Goal", AutoCommand.FOUR_BALL_LOW_GOAL);
-        m_autoChooser.addOption("Four Ball High Goal", AutoCommand.FOUR_BALL_HIGH_GOAL);
-        m_autoChooser.addOption("Five Ball Low Goal", AutoCommand.FIVE_BALL_LOW_GOAL);
-        m_autoChooser.addOption("Five Ball High Goal", AutoCommand.FIVE_BALL_HIGH_GOAL);
+        m_autoChooser.addOption("One Ball Bottom Left Low Goal", AutoCommand.ONE_BALL_BOT_LEFT_LOW_GOAL);
+        m_autoChooser.addOption("One Ball Bottom Low Goal", AutoCommand.ONE_BALL_BOT_LOW_GOAL);
+        m_autoChooser.addOption("Two Ball Top Low Goal", AutoCommand.TWO_BALL_TOP_LOW_GOAL);
+        m_autoChooser.addOption("Two Ball Top Low Goal", AutoCommand.TWO_BALL_TOP_LOW_GOAL);
+        m_autoChooser.addOption("Two Ball Bottom Low Goal", AutoCommand.TWO_BALL_BOT_LOW_GOAL);
+        m_autoChooser.addOption("Two Ball Bottom Left Low Goal", AutoCommand.TWO_BALL_BOT_LEFT_LOW_GOAL);
+        // m_autoChooser.addOption("Three Ball Bot Side Low Goal", AutoCommand.THREE_BALL_BOT_SIDE_LOW_GOAL);
+        m_autoChooser.addOption("Four Ball Low Goal", AutoCommand.FOUR_BALL_BOT_LEFT_LOW_GOAL);
+        // m_autoChooser.addOption("Five Ball Low Goal", AutoCommand.FIVE_BALL_LOW_GOAL);
 
         SmartDashboard.putData(m_autoChooser);
     }
