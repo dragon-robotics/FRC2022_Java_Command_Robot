@@ -30,6 +30,9 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
 import frc.robot.commands.IntakeCompressorOffCommand;
+import frc.robot.commands.IntakeCompressorOnCommand;
+import frc.robot.commands.IntakeMotorOffCommand;
+import frc.robot.commands.IntakeMotorOnCommand;
 import frc.robot.commands.IntakeMotorVariedCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
@@ -53,10 +56,12 @@ public class RobotContainer {
     
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  private final JoystickButton m_intakeNeutralButton = new JoystickButton(m_operatorController, Constants.BTN_A);
-  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_operatorController, Constants.BTN_B);
-  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_operatorController, Constants.BTN_X);
-  private final JoystickButton m_intakeCompressorButton = new JoystickButton(m_operatorController, Constants.BTN_Y);
+  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
+  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
+  private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
+  private final JoystickButton m_intakeCompressorOnButton = new JoystickButton(m_operatorController, Constants.BTN_START);
+  private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_operatorController, Constants.BTN_X);
+  private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_operatorController, Constants.BTN_Y);
   private final JoystickButton m_intakeEngageButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
   private final JoystickButton m_intakeMotorVariedButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
 
@@ -98,11 +103,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // m_intakeNeutralButton.whileHeld(new NeutralIntake(m_intakeSubsystem));
-    m_intakePistonExtendButton.whileHeld(new IntakePistonExtendCommand(m_intakeSubsystem));
-    m_intakePistonRetractButton.whileHeld(new IntakePistonRetractCommand(m_intakeSubsystem));
-    m_intakeCompressorButton.whileHeld(new IntakeCompressorOffCommand(m_intakeSubsystem));
+    m_intakePistonExtendButton.whenPressed(new IntakePistonExtendCommand(m_intakeSubsystem));
+    m_intakePistonRetractButton.whenPressed(new IntakePistonRetractCommand(m_intakeSubsystem));
     
+    m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
+    m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
+    
+    m_intakeMotorOffButton.whenPressed(new IntakeMotorOffCommand(m_intakeSubsystem));
+    m_intakeMotorOnButton.whenPressed(new IntakeMotorOnCommand(m_intakeSubsystem));
+
     m_intakeMotorVariedButton.whenHeld(new IntakeMotorVariedCommand(
         m_intakeSubsystem,
         () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
@@ -112,14 +121,14 @@ public class RobotContainer {
     // m_intakeMotorVariedButton.whenHeld(new IntakeMotorOnCommand(
     //     m_intakeSubsystem));
 
-    m_intakeEngageButton.toggleWhenPressed(new StartEndCommand(
-        // Engage => Start motor and extend solenoid
-        () -> { m_intakeSubsystem.engageMotor(); m_intakeSubsystem.pneumaticsRetract(); },
-        // Disengage => Stop motor and retract solenoid
-        () -> { m_intakeSubsystem.stopMotor(); m_intakeSubsystem.pneumaticsNeutral(); },
-        m_intakeSubsystem
-      )
-    );
+    // m_intakeEngageButton.toggleWhenPressed(new StartEndCommand(
+    //     // Engage => Start motor and extend solenoid
+    //     () -> { m_intakeSubsystem.engageMotor(); m_intakeSubsystem.pneumaticsRetract(); },
+    //     // Disengage => Stop motor and retract solenoid
+    //     () -> { m_intakeSubsystem.stopMotor(); m_intakeSubsystem.pneumaticsNeutral(); },
+    //     m_intakeSubsystem
+    //   )
+    // );
   }
 
   /**
