@@ -16,19 +16,11 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArcadeDriveCommand;
-import frc.robot.commands.IntakeCompressorOffCommand;
-import frc.robot.commands.IntakeMotorOffCommand;
-import frc.robot.commands.IntakeMotorOnCommand;
-import frc.robot.commands.IntakeMotorVariedCommand;
-import frc.robot.commands.IntakePistonExtendCommand;
-import frc.robot.commands.IntakePistonNeutralCommand;
-import frc.robot.commands.IntakePistonRetractCommand;
+import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +28,13 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.IntakeCompressorOffCommand;
+import frc.robot.commands.IntakeMotorVariedCommand;
+import frc.robot.commands.IntakePistonExtendCommand;
+import frc.robot.commands.IntakePistonNeutralCommand;
+import frc.robot.commands.IntakePistonRetractCommand;
+import frc.robot.commands.Auto.FourBallHighGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -61,7 +60,10 @@ public class RobotContainer {
   private final JoystickButton m_intakeEngageButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
   private final JoystickButton m_intakeMotorVariedButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
 
-  // Auto-Only Commands //
+  // Create the auto loader class to load everything for us //
+
+  // Create SmartDashboard chooser for autonomous routines
+  private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -79,6 +81,10 @@ public class RobotContainer {
     m_intakeSubsystem.setDefaultCommand(
       new IntakePistonNeutralCommand(m_intakeSubsystem)
     );
+
+    // Load all wpilib.json trajectory files into the Roborio to speed up auto
+    // deployment //
+    GenerateTrajectory.loadTrajectories();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -123,8 +129,19 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    return getRamseteCommand();
+    AutoCommand command = m_autoLoader.getSelected();
+
+    switch (command) {
+      case NONE:
+        return null;
+      case EXAMPLE_TRAJECTORY:
+        return getRamseteCommand();
+      case FOUR_BALL_HIGH_GOAL:
+        return new FourBallHighGoalCommand(
+            m_drivetrainSubsystem, command);
+      default:
+        return null;
+    }
   }
 
   public Command getNeutralIntakeCommand() {
