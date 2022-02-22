@@ -63,7 +63,7 @@ public class RobotContainer {
   private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_operatorController, Constants.BTN_X);
   private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_operatorController, Constants.BTN_Y);
   private final JoystickButton m_intakeEngageButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
-  private final JoystickButton m_intakeMotorVariedButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
+  private final JoystickButton m_intakeMotorVariedButton = new JoystickButton(m_driverController, Constants.BUMPER_RIGHT);
 
   // Create the auto loader class to load everything for us //
 
@@ -89,7 +89,7 @@ public class RobotContainer {
 
     // Load all wpilib.json trajectory files into the Roborio to speed up auto
     // deployment //
-    GenerateTrajectory.loadTrajectories();
+    // GenerateTrajectory.loadTrajectories();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -114,7 +114,7 @@ public class RobotContainer {
 
     m_intakeMotorVariedButton.whenHeld(new IntakeMotorVariedCommand(
         m_intakeSubsystem,
-        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+        () -> -m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
       )
     );
 

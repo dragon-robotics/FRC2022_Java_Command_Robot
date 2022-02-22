@@ -38,7 +38,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   // Intake motor commands
   public void engageMotor() {
-    m_intakeMotor.set(0.1);
+    m_intakeMotor.set(-0.1);
   }
 
   public void stopMotor() {
