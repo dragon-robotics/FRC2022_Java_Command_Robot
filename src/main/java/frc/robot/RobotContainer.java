@@ -74,7 +74,7 @@ public class RobotContainer {
         return null;
       case EXAMPLE_TRAJECTORY:
         return getRamseteCommand();
-      case FOUR_BALL_HIGH_GOAL:
+      case FOUR_BALL_BOT_LEFT_HIGH_GOAL:
         return new FourBallHighGoalCommand(
             m_drivetrainSubsystem, command);
       default:

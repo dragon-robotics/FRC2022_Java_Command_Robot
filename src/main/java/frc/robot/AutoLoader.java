@@ -22,14 +22,16 @@ public class AutoLoader {
         ONE_BALL_TOP_LEFT_LOW_GOAL,     // Scores the 1 ball on the low goal from the top left side of the tarmac
         ONE_BALL_BOT_LEFT_LOW_GOAL,     // Scores the 1 ball on the low goal from the bottom left side of the tarmac
         ONE_BALL_BOT_LOW_GOAL,          // Scores the 1 ball on the low goal from the bottom side of the tarmac
-        TWO_BALL_TOP_LOW_GOAL,          // Picks up the lone ball from the top side and scores the low goal
-        TWO_BALL_TOP_LEFT_LOW_GOAL,     // Picks up the lone ball from the top left side and scores the low goal
-        TWO_BALL_BOT_LEFT_LOW_GOAL,     // Picks up the lone ball from the bottom left side and scores the low goal
-        TWO_BALL_BOT_LOW_GOAL,          // Picks up the lone ball from the bottom side and scores the low goal
-        THREE_BALL_BOT_LEFT_LOW_GOAL,   // Picks up the one ball from the bottom left and score low
-        THREE_BALL_BOT_LOW_GOAL,        // Picks up the one ball from the bottom and score low
-        FOUR_BALL_BOT_LEFT_LOW_GOAL, // Picks up ball from bottom left, score 2 low, pick up 2 left ball, score 2 low
-        FOUR_BALL_BOT_LOW_GOAL,      // Picks up ball from bottom, score 2 low, pick up 2 left ball, score 2 low
+        TWO_BALL_TOP_LOW_GOAL,          // Picks up the 1 ball from the top side and scores the low goal
+        TWO_BALL_TOP_LEFT_LOW_GOAL,     // Picks up the 1 ball from the top left side and scores the low goal
+        TWO_BALL_BOT_LEFT_LOW_GOAL,     // Picks up the 1 ball from the bottom left side and scores the low goal
+        TWO_BALL_BOT_LOW_GOAL,          // Picks up the 1 ball from the bottom side and scores the low goal
+        THREE_BALL_TOP_LEFT_LOW_GOAL,   // Picks up the 1 ball from the top and score low
+        THREE_BALL_BOT_LEFT_LOW_GOAL,   // Picks up the 1 ball from the bottom left and score low
+        THREE_BALL_BOT_LOW_GOAL,        // Picks up the 1 ball from the bottom and score low
+        FOUR_BALL_TOP_LEFT_LOW_GOAL,    // Scores the 1 ball on the robot, drives to terminal, pick up 2 balls, score 2 low
+        FOUR_BALL_BOT_LEFT_LOW_GOAL,    // Picks up ball from bottom left, score 2 low, pick up 2 left ball, score 2 low
+        FOUR_BALL_BOT_LOW_GOAL,         // Picks up ball from bottom, score 2 low, pick up 2 left ball, score 2 low
         FIVE_BALL_LOW_GOAL,             // Score low, pick up bottom and the nearest left ball, score 2 low, pick up leftmost and human player ball, score 2 low
         // HIGH GOAL //
         ONE_BALL_TOP_HIGH_GOAL,         // Scores the 1 ball on the high goal from the top side of the tarmac
@@ -41,9 +43,9 @@ public class AutoLoader {
         TWO_BALL_BOT_LEFT_HIGH_GOAL,    // Picks up the lone ball from the bottom left side and scores the high goal
         TWO_BALL_BOT_HIGH_GOAL,         // Picks up the lone ball from the bottom side and scores the high goal
         THREE_BALL_BOT_LEFT_HIGH_GOAL,  // Picks up the one ball from the bottom left and score high
-        THREE_BALL_BOT_HIGH_GOAL,       // Picks up the one ball from the bottom and score high
-        FOUR_BALL_BOT_LEFT_HIGH_GOAL,// Picks up ball from bottom left, score 2 high, pick up 2 left ball, score 2 high
-        FOUR_BALL_BOT_HIGH_GOAL,     // Picks up ball from bottom, score 2 high, pick up 2 left ball, score 2 high
+        THREE_BALL_BOT_HIGH_GOAL,       // Picks up the one ball from the bottom left and score high
+        FOUR_BALL_BOT_LEFT_HIGH_GOAL,   // Picks up ball from bottom left, score 2 high, pick up 2 left ball, score 2 high
+        FOUR_BALL_BOT_HIGH_GOAL,        // Picks up ball from bottom, score 2 high, pick up 2 left ball, score 2 high
         FIVE_BALL_HIGH_GOAL             // Score high, pick up bottom and the nearest left ball, score 2 high, pick up leftmost and human player ball, score 2 high
     }
 

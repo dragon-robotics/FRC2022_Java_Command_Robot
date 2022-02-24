@@ -112,8 +112,8 @@ public class GenerateTrajectory {
                         config);
 
                 return new ArrayList<Trajectory>(Arrays.asList(exampleTrajectory));
-            case FOUR_BALL_HIGH_GOAL:
-                return trajMap.get("FourBallHighGoal");
+            case FOUR_BALL_BOT_LEFT_HIGH_GOAL:
+                return trajMap.get("FourBallBotLeftHighGoal");
             default:
                 return null;
         }
