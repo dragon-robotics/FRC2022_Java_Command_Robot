@@ -23,6 +23,7 @@ public class VariableUptakeCommand extends CommandBase {
     m_uptake = uptake;
     m_speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(uptake);
   }
 
   // Called when the command is initially scheduled.
