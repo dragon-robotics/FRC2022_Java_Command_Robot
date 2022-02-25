@@ -13,8 +13,8 @@ public class UptakeSubsystem extends SubsystemBase {
   /** Creates a new UptakeSubsystem. */
   public UptakeSubsystem() {}
 
-  CANSparkMax m_uptakemotor1 = new CANSparkMax(1, MotorType.kBrushless);
-  CANSparkMax m_uptakemotor2 = new CANSparkMax(2, MotorType.kBrushless);
+  CANSparkMax m_uptakemotor1 = new CANSparkMax(4, MotorType.kBrushless);
+  CANSparkMax m_uptakemotor2 = new CANSparkMax(6, MotorType.kBrushless);
 
   @Override
   public void periodic() {
@@ -25,8 +25,14 @@ public class UptakeSubsystem extends SubsystemBase {
     m_uptakemotor1.set(0.5);
     m_uptakemotor2.set(0.5);
   }
+  
   public void motorOff() {
     m_uptakemotor1.set(0);
     m_uptakemotor2.set(0);
+  }
+
+  public void uptake(double speed) {
+    m_uptakemotor1.set(speed);
+    m_uptakemotor2.set(speed);
   }
 }

@@ -30,6 +30,7 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.VariableShootCommand;
+import frc.robot.commands.VariableUptakeCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -52,7 +53,7 @@ public class RobotContainer {
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   private final JoystickButton m_uptakeButton = new JoystickButton(m_driverController, Constants.BTN_A);
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
-  private final JoystickButton m_shootButton = new JoystickButton(m_driverController, Constants.BTN_A);
+  private final JoystickButton m_shootButton = new JoystickButton(m_driverController, Constants.BTN_B);
 
   // Store our overall trajectory //
   Trajectory trajectory = new Trajectory();
@@ -83,7 +84,12 @@ public class RobotContainer {
       )
     );
 
-    m_uptakeSubsystem.setDefaultCommand(getUptakeMotorOffCommand());
+    m_uptakeSubsystem.setDefaultCommand(
+      new VariableUptakeCommand(
+        m_uptakeSubsystem,
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+      )
+    );
 
     m_shooterSubsystem.setDefaultCommand(
       new VariableShootCommand(

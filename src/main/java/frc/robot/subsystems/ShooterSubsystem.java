@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ShooterSubsystem extends SubsystemBase {
   /** Creates a new ShooterSubsystem. */
 
-  CANSparkMax m_shooterL = new CANSparkMax(1, MotorType.kBrushless);
-  CANSparkMax m_shooterR = new CANSparkMax(2, MotorType.kBrushless);
+  CANSparkMax m_shooterL = new CANSparkMax(7, MotorType.kBrushless);
+  CANSparkMax m_shooterR = new CANSparkMax(8, MotorType.kBrushless);
 
   public ShooterSubsystem() {
     // Inverting motor so motors spin in unison when connected to shooter
