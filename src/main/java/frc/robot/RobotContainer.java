@@ -28,6 +28,9 @@ import frc.robot.commands.UptakeMotorOffCommand;
 import frc.robot.commands.UptakeMotorOnCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.VariableShootCommand;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -43,13 +46,13 @@ public class RobotContainer {
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
   private final JoystickButton m_uptakeButton = new JoystickButton(m_driverController, Constants.BTN_A);
-  // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
-
-  // Auto-Only Commands //
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+  private final JoystickButton m_shootButton = new JoystickButton(m_driverController, Constants.BTN_A);
 
   // Store our overall trajectory //
   Trajectory trajectory = new Trajectory();
@@ -72,8 +75,22 @@ public class RobotContainer {
     String FiveBallAuto2Traj2Json = "Five-Ball-Auto-2-Pt2.wpilib.json";
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+      )
+    );
+
     m_uptakeSubsystem.setDefaultCommand(getUptakeMotorOffCommand());
+
+    m_shooterSubsystem.setDefaultCommand(
+      new VariableShootCommand(
+        m_shooterSubsystem,
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_RIGHT)
+      )
+    );
 
     try {
       // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj1Json);
@@ -118,6 +135,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
+    m_shootButton.whileHeld(new ShootCommand(m_shooterSubsystem));
   }
 
   /**
@@ -132,15 +150,6 @@ public class RobotContainer {
   }
   public Command getUptakeMotorOffCommand() {
   return new UptakeMotorOffCommand(m_uptakeSubsystem);
-  }
-
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
   }
 
   public Command getRamseteCommand() {
@@ -162,18 +171,6 @@ public class RobotContainer {
         .setKinematics(Constants.kDriveKinematics)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //   // Start at the origin facing the +X direction
-    //   new Pose2d(0, 0, new Rotation2d(0)),
-    //   // Pass through these two interior waypoints, making an 's' curve path
-    //   List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //   // End 3 meters straight ahead of where we started, facing forward
-    //   new Pose2d(3, 0, new Rotation2d(0)),
-    //   // Pass config
-    //   config
-    // );
 
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
