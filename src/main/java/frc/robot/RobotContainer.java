@@ -16,7 +16,8 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.AutoLoader.AutoCommand;
-import frc.robot.commands.Auto.FourBallHighGoalCommand;
+import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -74,8 +75,11 @@ public class RobotContainer {
         return null;
       case EXAMPLE_TRAJECTORY:
         return getRamseteCommand();
-      case FOUR_BALL_BOT_LEFT_HIGH_GOAL:
-        return new FourBallHighGoalCommand(
+      case ONE_BALL_TOP_LOW_GOAL:
+        return new OneBallTopLowGoalCommand(
+          m_drivetrainSubsystem, command);
+      case FOUR_BALL_TOP_LEFT_LOW_GOAL:
+        return new FourBallTopLeftLowGoalCommand(
             m_drivetrainSubsystem, command);
       default:
         return null;
