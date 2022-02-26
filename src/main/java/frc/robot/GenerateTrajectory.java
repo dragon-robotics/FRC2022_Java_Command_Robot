@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +26,10 @@ import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.subsystems.DrivetrainSubsystem;
 
 /** Generates Trajectories depending on which auto mode is selected */
 public class GenerateTrajectory {
@@ -112,10 +117,33 @@ public class GenerateTrajectory {
                         config);
 
                 return new ArrayList<Trajectory>(Arrays.asList(exampleTrajectory));
-            case FOUR_BALL_BOT_LEFT_HIGH_GOAL:
-                return trajMap.get("FourBallBotLeftHighGoal");
+            case FOUR_BALL_TOP_LEFT_LOW_GOAL:
+                return trajMap.get("FourBallTopLeftLowGoal");
             default:
                 return null;
         }
+    }
+
+    public static Command getRamseteCommand(
+        Trajectory trajectory,
+        DrivetrainSubsystem drivetrain) {
+  
+      return new RamseteCommand(
+          trajectory,
+          drivetrain::getPose,
+          new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
+          new SimpleMotorFeedforward(
+              Constants.ksVolts,
+              Constants.kvVoltSecondsPerMeter,
+              Constants.kaVoltSecondsSquaredPerMeter),
+          Constants.kDriveKinematics,
+          drivetrain::getWheelSpeeds,
+          new PIDController(Constants.kPDriveVel, 0, 0),
+          new PIDController(Constants.kPDriveVel, 0, 0),
+          // RamseteCommand passes volts to the callback
+          drivetrain::tankDriveVolts,
+          drivetrain)
+              .beforeStarting(() -> drivetrain.resetOdometry(trajectory.getInitialPose()))
+              .andThen(() -> drivetrain.tankDriveVolts(0, 0));
     }
 }
