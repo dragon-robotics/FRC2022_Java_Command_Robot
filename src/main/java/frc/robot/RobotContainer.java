@@ -23,9 +23,9 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.UptakeMotorOffCommand;
 import frc.robot.commands.UptakeMotorOnCommand;
+import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 import frc.robot.commands.ShootCommand;
@@ -35,6 +35,17 @@ import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
+import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -55,32 +66,20 @@ public class RobotContainer {
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
   private final JoystickButton m_shootButton = new JoystickButton(m_driverController, Constants.BTN_B);
 
-  // Store our overall trajectory //
-  Trajectory trajectory = new Trajectory();
+  // Create the auto loader class to load everything for us //
+  private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    String fourBallAutoTraj1Json = "Four-Ball-Auto-Pt1.wpilib.json";
-    String fourBallAutoTraj2Json = "Four-Ball-Auto-Pt2.wpilib.json";
-    String fourBallAutoTraj3Json = "Four-Ball-Auto-Pt3.wpilib.json";
-    String fourBallAutoTraj4Json = "Four-Ball-Auto-Pt4.wpilib.json";
-
-    String FiveBallAutoTraj1Json = "Five-Ball-Auto-Pt1.wpilib.json";
-    String FiveBallAutoTraj2Json = "Five-Ball-Auto-Pt2.wpilib.json";
-    String FiveBallAutoTraj3Json = "Five-Ball-Auto-Pt3.wpilib.json";
-    String FiveBallAutoTraj4Json = "Five-Ball-Auto-Pt4.wpilib.json";
-    String FiveBallAutoTraj5Json = "Five-Ball-Auto-Pt5.wpilib.json";
-
-    String FiveBallAuto2Traj1Json = "Five-Ball-Auto-2-Pt1.wpilib.json";
-    String FiveBallAuto2Traj2Json = "Five-Ball-Auto-2-Pt2.wpilib.json";
 
     // Set default command to arcade drive when in teleop
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
-        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),   // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),   // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
+        () -> m_driverController.getRawButton(Constants.BUMPER_RIGHT)   // reverse
       )
     );
 
@@ -98,36 +97,9 @@ public class RobotContainer {
       )
     );
 
-    try {
-      // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj1Json);
-      // Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj2Json);
-      // Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(threeBallAutoTraj3Json);
-      // Trajectory traj3 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // Trajectory tempTrajectory = traj1.concatenate(traj2);
-      // trajectory = tempTrajectory.concatenate(traj3);
-
-      // Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj1Json);
-      // Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj2Json);
-      // Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj3Json);
-      // Trajectory traj3 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj4Json);
-      // Trajectory traj4 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      // trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAutoTraj5Json);
-      // Trajectory traj5 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAuto2Traj1Json);
-      Trajectory traj1 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-      trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(FiveBallAuto2Traj2Json);
-      Trajectory traj2 = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-
-      trajectory = traj1.concatenate(traj2);
-    } catch (IOException ex) {
-
-    }
+    // Load all wpilib.json trajectory files into the Roborio to speed up auto
+    // deployment //
+    GenerateTrajectory.loadTrajectories();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -151,8 +123,46 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    return getRamseteCommand();
+    AutoCommand command = m_autoLoader.getSelected();
+
+    switch (command) {
+      case NONE:
+        return null;
+      case EXAMPLE_TRAJECTORY:
+        return getRamseteCommand();
+      case ONE_BALL_TOP_LOW_GOAL:
+        return new OneBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_TOP_LEFT_LOW_GOAL:
+        return new OneBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LEFT_LOW_GOAL:
+        return new OneBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LOW_GOAL:
+        return new OneBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LOW_GOAL:
+        return new TwoBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LEFT_LOW_GOAL:
+        return new TwoBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LEFT_LOW_GOAL:
+        return new TwoBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LOW_GOAL:
+        return new TwoBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FOUR_BALL_TOP_LEFT_LOW_GOAL:
+        return new FourBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FIVE_BALL_BOT_LOW_GOAL:
+        return new FiveBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      default:
+        return null;
+    }
   }
   public Command getUptakeMotorOffCommand() {
   return new UptakeMotorOffCommand(m_uptakeSubsystem);
@@ -196,8 +206,7 @@ public class RobotContainer {
     );
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-      // exampleTrajectory,
-      trajectory,
+      exampleTrajectory,
       m_drivetrainSubsystem::getPose,
       new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
       new SimpleMotorFeedforward(
@@ -214,7 +223,7 @@ public class RobotContainer {
     );
 
     // Reset odometry to the starting pose of the trajectory.
-    m_drivetrainSubsystem.resetOdometry(trajectory.getInitialPose());
+    m_drivetrainSubsystem.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
     return ramseteCommand.andThen(() -> m_drivetrainSubsystem.tankDriveVolts(0, 0));

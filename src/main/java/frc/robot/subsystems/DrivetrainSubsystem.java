@@ -28,10 +28,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   // Declare subsystem attribute/components //
   
   // Motor Controllers //
-  WPI_TalonFX m_talonLeftLead = new WPI_TalonFX(2);
-  WPI_TalonFX m_talonLeftFollow = new WPI_TalonFX(1);
-  WPI_TalonFX m_talonRightLead = new WPI_TalonFX(4);
-  WPI_TalonFX m_talonRightFollow = new WPI_TalonFX(3);
+  WPI_TalonFX m_talonLeftLead = new WPI_TalonFX(Constants.TALONFX_LEFT_TOP);
+  WPI_TalonFX m_talonLeftFollow = new WPI_TalonFX(Constants.TALONFX_LEFT_BOTTOM);
+  WPI_TalonFX m_talonRightLead = new WPI_TalonFX(Constants.TALONFX_RIGHT_TOP);
+  WPI_TalonFX m_talonRightFollow = new WPI_TalonFX(Constants.TALONFX_RIGHT_BOTTOM);
   DifferentialDrive m_drive = new DifferentialDrive(m_talonLeftLead, m_talonRightLead);
   
   // Gyro - NavX //
@@ -69,10 +69,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_talonRightFollow.set(ControlMode.PercentOutput, 0);
 
     // Set neutral mode to brake on all motors //
-    m_talonLeftLead.setNeutralMode(NeutralMode.Coast);
-    m_talonLeftFollow.setNeutralMode(NeutralMode.Coast);
-    m_talonRightLead.setNeutralMode(NeutralMode.Coast);
-    m_talonRightFollow.setNeutralMode(NeutralMode.Coast);
+    m_talonLeftLead.setNeutralMode(NeutralMode.Brake);
+    m_talonLeftFollow.setNeutralMode(NeutralMode.Brake);
+    m_talonRightLead.setNeutralMode(NeutralMode.Brake);
+    m_talonRightFollow.setNeutralMode(NeutralMode.Brake);
 
     // Set our followers to follow the lead motor //
     m_talonLeftFollow.follow(m_talonLeftLead);
@@ -135,7 +135,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Drive Modes //
   public void arcadeDrive(double speed, double rotation) {
-    m_drive.arcadeDrive(speed / 2, rotation / 2);
+    m_drive.arcadeDrive(speed, rotation);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
