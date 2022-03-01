@@ -48,7 +48,7 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
   // Create the auto loader class to load everything for us //
 
@@ -62,8 +62,10 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
-        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),   // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),   // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
+        () -> m_driverController.getRawButton(Constants.BUMPER_RIGHT)   // reverse
       )
     );
 
