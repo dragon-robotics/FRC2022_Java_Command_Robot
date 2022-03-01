@@ -135,7 +135,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   // Drive Modes //
   public void arcadeDrive(double speed, double rotation) {
-    m_drive.arcadeDrive(speed / 2, rotation / 2);
+    m_drive.arcadeDrive(speed, rotation);
   }
 
   public void tankDrive(double leftSpeed, double rightSpeed) {
