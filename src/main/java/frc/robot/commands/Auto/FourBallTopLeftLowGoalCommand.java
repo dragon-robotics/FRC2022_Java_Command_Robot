@@ -22,7 +22,7 @@ import frc.robot.AutoLoader.AutoCommand;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class FourBallHighGoalCommand extends ParallelCommandGroup {
+public class FourBallTopLeftLowGoalCommand extends ParallelCommandGroup {
   /** Creates a new FourBallHighGoalCommand. */
 
   private Trajectory p1, p2; // Part 1 and 2 of the trajectory
@@ -31,9 +31,10 @@ public class FourBallHighGoalCommand extends ParallelCommandGroup {
   // - Drivetrain subsystem
   // - Shooter subsystem
   // - Intake subsystem
-  public FourBallHighGoalCommand(
+  public FourBallTopLeftLowGoalCommand(
       DrivetrainSubsystem drivetrain,
-      AutoCommand command) {
+      AutoCommand command
+  ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
 
@@ -47,37 +48,14 @@ public class FourBallHighGoalCommand extends ParallelCommandGroup {
      * Command Sequence all ran in parallel:
      * 1. Engage Shooter and Intake - <Parallel>
      * 2. new Sequential Command
-     * a. Move backwards, intake ball, move forward
-     * b. Shoot for x seconds
-     * c. Move backwards, intake 2 more balls, move forward
-     * d. Shoot for x seconds
+     *  a. Move backwards, intake ball, move forward
+     *  b. Shoot for x seconds
+     *  c. Move backwards, intake 2 more balls, move forward
+     *  d. Shoot for x seconds
      */
     addCommands(
         new SequentialCommandGroup(
-            getRamseteCommand(p1, drivetrain),
-            getRamseteCommand(p2, drivetrain)));
-  }
-
-  private Command getRamseteCommand(
-      Trajectory trajectory,
-      DrivetrainSubsystem drivetrain) {
-
-    return new RamseteCommand(
-        trajectory,
-        drivetrain::getPose,
-        new RamseteController(Constants.kRamseteB, Constants.kRamseteZeta),
-        new SimpleMotorFeedforward(
-            Constants.ksVolts,
-            Constants.kvVoltSecondsPerMeter,
-            Constants.kaVoltSecondsSquaredPerMeter),
-        Constants.kDriveKinematics,
-        drivetrain::getWheelSpeeds,
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        new PIDController(Constants.kPDriveVel, 0, 0),
-        // RamseteCommand passes volts to the callback
-        drivetrain::tankDriveVolts,
-        drivetrain)
-            .beforeStarting(() -> drivetrain.resetOdometry(trajectory.getInitialPose()))
-            .andThen(() -> drivetrain.tankDriveVolts(0, 0));
+            GenerateTrajectory.getRamseteCommand(p1, drivetrain),
+            GenerateTrajectory.getRamseteCommand(p2, drivetrain)));
   }
 }

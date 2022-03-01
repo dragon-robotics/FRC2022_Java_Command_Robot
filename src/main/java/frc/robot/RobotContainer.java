@@ -37,7 +37,16 @@ import frc.robot.commands.IntakeMotorVariedCommand;
 import frc.robot.commands.IntakePistonExtendCommand;
 import frc.robot.commands.IntakePistonNeutralCommand;
 import frc.robot.commands.IntakePistonRetractCommand;
-import frc.robot.commands.Auto.FourBallHighGoalCommand;
+import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
+import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -53,9 +62,8 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-    
-  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
   private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
   private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
   private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
@@ -77,8 +85,10 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
-        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),   // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),   // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
+        () -> m_driverController.getRawButton(Constants.BUMPER_RIGHT)   // reverse
       )
     );
     
@@ -145,8 +155,35 @@ public class RobotContainer {
         return null;
       case EXAMPLE_TRAJECTORY:
         return getRamseteCommand();
-      case FOUR_BALL_HIGH_GOAL:
-        return new FourBallHighGoalCommand(
+      case ONE_BALL_TOP_LOW_GOAL:
+        return new OneBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_TOP_LEFT_LOW_GOAL:
+        return new OneBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LEFT_LOW_GOAL:
+        return new OneBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LOW_GOAL:
+        return new OneBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LOW_GOAL:
+        return new TwoBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LEFT_LOW_GOAL:
+        return new TwoBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LEFT_LOW_GOAL:
+        return new TwoBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LOW_GOAL:
+        return new TwoBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FOUR_BALL_TOP_LEFT_LOW_GOAL:
+        return new FourBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FIVE_BALL_BOT_LOW_GOAL:
+        return new FiveBallBotLowGoalCommand(
             m_drivetrainSubsystem, command);
       default:
         return null;
