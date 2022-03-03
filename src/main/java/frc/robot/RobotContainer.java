@@ -19,10 +19,21 @@ import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstrai
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
+import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,15 +48,30 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  // private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+  private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
 
-  // Auto-Only Commands //
+  // Create the auto loader class to load everything for us //
+
+  // Create SmartDashboard chooser for autonomous routines
+  private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     // Set default command to arcade drive when in teleop
-    m_drivetrainSubsystem.setDefaultCommand(getArcadeDriveCommand());
+    m_drivetrainSubsystem.setDefaultCommand(
+      new ArcadeDriveCommand(
+        m_drivetrainSubsystem,
+        () -> -m_driverController.getRawAxis(Constants.TRIGGER_RIGHT),  // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_LEFT_X),    // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
+        () -> m_driverController.getRawButton(Constants.BTN_A)          // reverse
+      )
+    );
+
+    // Load all wpilib.json trajectory files into the Roborio to speed up auto
+    // deployment //
+    GenerateTrajectory.loadTrajectories();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -66,17 +92,46 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    // return m_autoCommand;
-    return getRamseteCommand();
-  }
+    AutoCommand command = m_autoLoader.getSelected();
 
-  public Command getArcadeDriveCommand(){
-    // Commands //
-    return new ArcadeDriveCommand(
-      m_drivetrainSubsystem,
-      () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),
-      () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X)
-    );
+    switch (command) {
+      case NONE:
+        return null;
+      case EXAMPLE_TRAJECTORY:
+        return getRamseteCommand();
+      case ONE_BALL_TOP_LOW_GOAL:
+        return new OneBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_TOP_LEFT_LOW_GOAL:
+        return new OneBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LEFT_LOW_GOAL:
+        return new OneBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case ONE_BALL_BOT_LOW_GOAL:
+        return new OneBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LOW_GOAL:
+        return new TwoBallTopLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_TOP_LEFT_LOW_GOAL:
+        return new TwoBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LEFT_LOW_GOAL:
+        return new TwoBallBotLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case TWO_BALL_BOT_LOW_GOAL:
+        return new TwoBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FOUR_BALL_TOP_LEFT_LOW_GOAL:
+        return new FourBallTopLeftLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      case FIVE_BALL_BOT_LOW_GOAL:
+        return new FiveBallBotLowGoalCommand(
+            m_drivetrainSubsystem, command);
+      default:
+        return null;
+    }
   }
 
   public Command getRamseteCommand() {
@@ -98,18 +153,6 @@ public class RobotContainer {
         .setKinematics(Constants.kDriveKinematics)
         // Apply the voltage constraint
         .addConstraint(autoVoltageConstraint);
-
-    // An example trajectory to follow. All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //   // Start at the origin facing the +X direction
-    //   new Pose2d(0, 0, new Rotation2d(0)),
-    //   // Pass through these two interior waypoints, making an 's' curve path
-    //   List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-    //   // End 3 meters straight ahead of where we started, facing forward
-    //   new Pose2d(3, 0, new Rotation2d(0)),
-    //   // Pass config
-    //   config
-    // );
 
     Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
       // Start at the origin facing the +X direction
