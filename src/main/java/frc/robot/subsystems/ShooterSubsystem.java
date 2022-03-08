@@ -19,7 +19,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     // Inverting motor so motors spin in unison when connected to shooter
     m_shooterR.setInverted(true);
-
   }
 
   @Override

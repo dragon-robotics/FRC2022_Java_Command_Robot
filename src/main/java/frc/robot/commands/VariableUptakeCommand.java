@@ -13,15 +13,18 @@ public class VariableUptakeCommand extends CommandBase {
   /** Creates a new VariableUptakeCommand. */
 
   private final UptakeSubsystem m_uptake;
-  private final Supplier<Double> m_speed;
+  private final Supplier<Double> m_upSpeed;
+  private final Supplier<Double> m_downSpeed;
 
   public VariableUptakeCommand(
     UptakeSubsystem uptake,
-    Supplier<Double> speed
+    Supplier<Double> upSpeed,
+    Supplier<Double> downSpeed
   ) {
 
     m_uptake = uptake;
-    m_speed = speed;
+    m_upSpeed = upSpeed;
+    m_downSpeed = downSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(uptake);
   }
@@ -33,7 +36,8 @@ public class VariableUptakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_uptake.uptake(m_speed.get());
+    double speed = m_upSpeed.get() + m_downSpeed.get();
+    m_uptake.uptake(speed);
   }
 
   // Called once the command ends or is interrupted.

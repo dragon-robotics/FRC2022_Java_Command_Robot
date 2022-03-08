@@ -17,18 +17,13 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.UptakeMotorOffCommand;
-import frc.robot.commands.UptakeMotorOnCommand;
 import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
-import frc.robot.commands.ShootCommand;
 import frc.robot.commands.VariableShootCommand;
 import frc.robot.commands.VariableUptakeCommand;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -62,9 +57,9 @@ public class RobotContainer {
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
-  private final JoystickButton m_uptakeButton = new JoystickButton(m_driverController, Constants.BTN_A);
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
-  private final JoystickButton m_shootButton = new JoystickButton(m_driverController, Constants.BTN_B);
+  // private final JoystickButton m_uptakeButton = new JoystickButton(m_operatorController, Constants.BTN_A);
+  // private final JoystickButton m_shootButton = new JoystickButton(m_operatorController, Constants.BTN_B);
 
   // Create the auto loader class to load everything for us //
   private final AutoLoader m_autoLoader = new AutoLoader();
@@ -86,14 +81,15 @@ public class RobotContainer {
     m_uptakeSubsystem.setDefaultCommand(
       new VariableUptakeCommand(
         m_uptakeSubsystem,
-        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT)
+        () -> m_operatorController.getRawAxis(Constants.TRIGGER_RIGHT),
+        () -> -m_operatorController.getRawAxis(Constants.TRIGGER_LEFT)
       )
     );
 
     m_shooterSubsystem.setDefaultCommand(
       new VariableShootCommand(
         m_shooterSubsystem,
-        () -> m_driverController.getRawAxis(Constants.TRIGGER_RIGHT)
+        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
       )
     );
 
@@ -112,8 +108,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
-    m_shootButton.whileHeld(new ShootCommand(m_shooterSubsystem));
+    // m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
+    // m_shootButton.whileHeld(new ShootCommand(m_shooterSubsystem));
   }
 
   /**
@@ -163,9 +159,6 @@ public class RobotContainer {
       default:
         return null;
     }
-  }
-  public Command getUptakeMotorOffCommand() {
-  return new UptakeMotorOffCommand(m_uptakeSubsystem);
   }
 
   public Command getRamseteCommand() {
