@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -22,6 +24,10 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.UptakeSubsystem;
+import frc.robot.commands.VariableShootCommand;
+import frc.robot.commands.VariableUptakeCommand;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -51,6 +57,8 @@ public class RobotContainer {
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
   private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
@@ -58,10 +66,10 @@ public class RobotContainer {
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
   private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
   private final JoystickButton m_intakeCompressorOnButton = new JoystickButton(m_operatorController, Constants.BTN_START);
+  // private final JoystickButton m_uptakeButton = new JoystickButton(m_operatorController, Constants.BTN_A);
+  // private final JoystickButton m_shootButton = new JoystickButton(m_operatorController, Constants.BTN_B);
 
   // Create the auto loader class to load everything for us //
-
-  // Create SmartDashboard chooser for autonomous routines
   private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -91,6 +99,21 @@ public class RobotContainer {
       )
     );
 
+    m_uptakeSubsystem.setDefaultCommand(
+      new VariableUptakeCommand(
+        m_uptakeSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.TRIGGER_RIGHT),
+        () -> -m_operatorController.getRawAxis(Constants.TRIGGER_LEFT)
+      )
+    );
+
+    m_shooterSubsystem.setDefaultCommand(
+      new VariableShootCommand(
+        m_shooterSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
+      )
+    );
+
     // Load all wpilib.json trajectory files into the Roborio to speed up auto
     // deployment //
     GenerateTrajectory.loadTrajectories();
@@ -109,6 +132,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
     m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
+    // m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
+    // m_shootButton.whileHeld(new ShootCommand(m_shooterSubsystem));
   }
 
   /**
