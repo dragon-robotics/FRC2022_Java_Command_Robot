@@ -28,11 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
 import frc.robot.commands.IntakeCompressorOffCommand;
 import frc.robot.commands.IntakeCompressorOnCommand;
-import frc.robot.commands.IntakeMotorOffCommand;
-import frc.robot.commands.IntakeMotorOnCommand;
-import frc.robot.commands.IntakePistonExtendCommand;
-import frc.robot.commands.IntakePistonNeutralCommand;
-import frc.robot.commands.IntakePistonRetractCommand;
+import frc.robot.commands.IntakeTest;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
@@ -60,12 +56,8 @@ public class RobotContainer {
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
 
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
-  private final JoystickButton m_intakePistonExtendButton = new JoystickButton(m_operatorController, Constants.BUMPER_RIGHT);
-  private final JoystickButton m_intakePistonRetractButton = new JoystickButton(m_operatorController, Constants.BUMPER_LEFT);
   private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
   private final JoystickButton m_intakeCompressorOnButton = new JoystickButton(m_operatorController, Constants.BTN_START);
-  private final JoystickButton m_intakeMotorOnButton = new JoystickButton(m_operatorController, Constants.BTN_X);
-  private final JoystickButton m_intakeMotorOffButton = new JoystickButton(m_operatorController, Constants.BTN_Y);
 
   // Create the auto loader class to load everything for us //
 
@@ -87,8 +79,16 @@ public class RobotContainer {
     );
     
     // Set default intake to have neutral motor and intake //
+    // m_intakeSubsystem.setDefaultCommand(
+    //   new IntakePistonNeutralCommand(m_intakeSubsystem)
+    // );
     m_intakeSubsystem.setDefaultCommand(
-      new IntakePistonNeutralCommand(m_intakeSubsystem)
+      new IntakeTest(
+        m_intakeSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
+        () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
+        () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
+      )
     );
 
     // Load all wpilib.json trajectory files into the Roborio to speed up auto
@@ -107,14 +107,8 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    m_intakePistonExtendButton.whenPressed(new IntakePistonExtendCommand(m_intakeSubsystem));
-    m_intakePistonRetractButton.whenPressed(new IntakePistonRetractCommand(m_intakeSubsystem));
-    
     m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
     m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
-    
-    m_intakeMotorOffButton.whenPressed(new IntakeMotorOffCommand(m_intakeSubsystem));
-    m_intakeMotorOnButton.whenPressed(new IntakeMotorOnCommand(m_intakeSubsystem));
   }
 
   /**

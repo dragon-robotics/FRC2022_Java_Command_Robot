@@ -17,6 +17,8 @@ public class IntakeTest extends CommandBase {
   private final Supplier<Boolean> m_extend;   // Extend Intake
   private final Supplier<Boolean> m_retract;  // Retract Intake
 
+  private boolean m_state; // State of intake, extended = true, retracted = false
+
   public IntakeTest(
     IntakeSubsystem intake,
     Supplier<Double> speed,
@@ -27,6 +29,7 @@ public class IntakeTest extends CommandBase {
     m_speed = speed;
     m_extend = extend;
     m_retract = retract;
+    m_state = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -42,15 +45,19 @@ public class IntakeTest extends CommandBase {
     // Extend the intake //
     if(m_extend.get()){
       m_intake.pneumaticsExtend();
+      m_state = true;
     }
 
     // Retract the intake //
     if (m_retract.get()) {
       m_intake.pneumaticsRetract();
+      m_state = false;
     }
 
-    // Vary intake motor speed //
-    m_intake.variableMotor(m_speed.get());
+    // Vary intake motor speed only if the intake is extended //
+    if(m_state){
+      m_intake.variableMotor(m_speed.get());
+    }
   }
 
   // Called once the command ends or is interrupted.
