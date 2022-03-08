@@ -32,10 +32,6 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void variedMotor(double motorSpeed) {
-    m_intakeMotor.set(motorSpeed);
-  }
-
   // Intake motor commands
   public void engageMotor() {
     m_intakeMotor.set(-0.5);

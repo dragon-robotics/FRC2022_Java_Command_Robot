@@ -33,7 +33,7 @@ public class IntakeMotorVariedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.variedMotor(m_speed.get());
+    m_intake.variableMotor(m_speed.get());
   }
 
   // Called once the command ends or is interrupted.
