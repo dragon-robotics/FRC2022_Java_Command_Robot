@@ -29,12 +29,23 @@ import frc.robot.commands.VariableShootCommand;
 import frc.robot.commands.VariableUptakeCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.IntakeCargo;
 import frc.robot.commands.IntakeCompressorOffCommand;
 import frc.robot.commands.IntakeCompressorOnCommand;
+import frc.robot.commands.IntakeEngage;
+import frc.robot.commands.IntakeMotorOnCommand;
+import frc.robot.commands.IntakeNeutral;
+import frc.robot.commands.IntakePistonExtendCommand;
+import frc.robot.commands.IntakeRetract;
 import frc.robot.commands.IntakeTest;
+import frc.robot.commands.ShootCommand;
+import frc.robot.commands.UptakeMotorOffCommand;
+import frc.robot.commands.UptakeMotorOnCommand;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
@@ -66,8 +77,8 @@ public class RobotContainer {
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
   private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
   private final JoystickButton m_intakeCompressorOnButton = new JoystickButton(m_operatorController, Constants.BTN_START);
-  // private final JoystickButton m_uptakeButton = new JoystickButton(m_operatorController, Constants.BTN_A);
-  // private final JoystickButton m_shootButton = new JoystickButton(m_operatorController, Constants.BTN_B);
+  private final JoystickButton m_intakeCargoButton = new JoystickButton(m_operatorController, Constants.BTN_A);
+  private final JoystickButton m_shootButton = new JoystickButton(m_operatorController, Constants.BTN_B);
 
   // Create the auto loader class to load everything for us //
   private final AutoLoader m_autoLoader = new AutoLoader();
@@ -79,10 +90,10 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
-        () -> -m_driverController.getRawAxis(Constants.TRIGGER_RIGHT),  // speed
-        () -> m_driverController.getRawAxis(Constants.STICK_LEFT_X),    // turn
-        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
-        () -> m_driverController.getRawButton(Constants.BTN_A)          // reverse
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),  // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),  // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),   // throttle
+        () -> m_driverController.getRawButton(Constants.BUMPER_LEFT)   // reverse
       )
     );
     
@@ -90,13 +101,18 @@ public class RobotContainer {
     // m_intakeSubsystem.setDefaultCommand(
     //   new IntakePistonNeutralCommand(m_intakeSubsystem)
     // );
+
+    // m_intakeSubsystem.setDefaultCommand(
+    //   new IntakeTest(
+    //     m_intakeSubsystem,
+    //     () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
+    //     () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
+    //     () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
+    //   )
+    // );
+
     m_intakeSubsystem.setDefaultCommand(
-      new IntakeTest(
-        m_intakeSubsystem,
-        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
-        () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
-        () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
-      )
+      new IntakeNeutral(m_intakeSubsystem)
     );
 
     m_uptakeSubsystem.setDefaultCommand(
@@ -120,7 +136,6 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
-    
   }
 
   /**
@@ -132,8 +147,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
     m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
-    // m_uptakeButton.whenHeld(new UptakeMotorOnCommand(m_uptakeSubsystem));
-    // m_shootButton.whileHeld(new ShootCommand(m_shooterSubsystem));
+    m_intakeCargoButton.whenHeld(new IntakeCargo(m_intakeSubsystem, m_uptakeSubsystem));
+    m_shootButton.whenHeld(new ShootCommand(m_uptakeSubsystem, m_shooterSubsystem));
   }
 
   /**

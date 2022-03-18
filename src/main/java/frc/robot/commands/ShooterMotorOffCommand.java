@@ -5,21 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class IntakeEngage extends CommandBase {
-  /** Creates a new IntakeEngage. */
+public class ShooterMotorOffCommand extends CommandBase {
+  private final ShooterSubsystem m_shooter;
 
-  private final IntakeSubsystem m_intake; // Intake Subsystem
-
-  public IntakeEngage(
-    IntakeSubsystem intake
+  /** Creates a new ShooterMotorOff. */
+  public ShooterMotorOffCommand(
+    ShooterSubsystem shooter
   ) {
-    m_intake = intake;
+    m_shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+    addRequirements(shooter); 
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -27,8 +25,7 @@ public class IntakeEngage extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.reverseMotor();
-    m_intake.pneumaticsExtend();
+    m_shooter.stopMotor();
   }
 
   // Called once the command ends or is interrupted.

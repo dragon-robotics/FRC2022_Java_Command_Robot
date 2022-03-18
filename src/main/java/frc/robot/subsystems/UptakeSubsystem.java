@@ -21,9 +21,14 @@ public class UptakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void motorOn() {
+  public void motorUp() {
     m_uptakemotor1.set(0.5);
     m_uptakemotor2.set(0.5);
+  }
+
+  public void motorDown() {
+    m_uptakemotor1.set(-0.5);
+    m_uptakemotor2.set(-0.5);
   }
   
   public void motorOff() {

@@ -20,8 +20,8 @@ public class IntakeSubsystem extends SubsystemBase {
 
   CANSparkMax m_intakeMotor = new CANSparkMax(2, MotorType.kBrushless);
 
-  DoubleSolenoid m_doublePCM1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 6, 7);
-  DoubleSolenoid m_doublePCM2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 4, 5);
+  DoubleSolenoid m_doublePCM1 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+  DoubleSolenoid m_doublePCM2 = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
 
   Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
 
@@ -33,7 +33,11 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   // Intake motor commands
-  public void engageMotor() {
+  public void forwardMotor() {
+    m_intakeMotor.set(0.5);
+  }
+
+  public void reverseMotor() {
     m_intakeMotor.set(-0.5);
   }
 

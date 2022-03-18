@@ -5,32 +5,26 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ShootCommand extends SequentialCommandGroup {
-  /** Creates a new ShootCommand. */
-  public ShootCommand(
-    UptakeSubsystem uptake,
-    ShooterSubsystem shooter
+public class IntakeCargo extends SequentialCommandGroup {
+  /** Creates a new IntakeCargo. */
+  public IntakeCargo(
+    IntakeSubsystem intake,
+    UptakeSubsystem uptake
   ) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ParallelRaceGroup(
-        new WaitCommand(0.3), // Have the uptake go down for half a second
-        new UptakeMotorDownCommand(uptake),
-        new ShooterMotorBackwardCommand(shooter)
-      ),
+      new IntakePistonExtendCommand(intake),
       new ParallelCommandGroup(
-        new UptakeMotorUpCommand(uptake),
-        new ShooterMotorForwardCommand(shooter)
+          new IntakeMotorForwardCommand(intake),
+          new UptakeMotorUpCommand(uptake)
       )
     );
   }

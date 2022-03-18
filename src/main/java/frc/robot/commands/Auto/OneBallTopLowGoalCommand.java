@@ -49,6 +49,8 @@ public class OneBallTopLowGoalCommand extends ParallelCommandGroup {
     addCommands(
       new SequentialCommandGroup(
         GenerateTrajectory.getRamseteCommand(p1, drivetrain),
+        // Activate the intake + activate the uptake + activate the shooter
+        
         GenerateTrajectory.getRamseteCommand(p2, drivetrain)
       )
     );
