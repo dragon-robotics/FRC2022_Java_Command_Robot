@@ -33,8 +33,7 @@ public class VariableUptakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = m_speed.get();
-    m_uptake.uptake(speed);
+    m_uptake.uptake(m_speed.get() * 0.7);
   }
 
   // Called once the command ends or is interrupted.

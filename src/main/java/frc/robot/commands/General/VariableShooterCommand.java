@@ -33,7 +33,7 @@ public class VariableShooterCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_shooter.shoot(m_speed.get());
+    m_shooter.shoot(m_speed.get() * 0.85);
   }
 
   // Called once the command ends or is interrupted.

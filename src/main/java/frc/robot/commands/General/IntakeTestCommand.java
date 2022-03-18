@@ -61,7 +61,7 @@ public class IntakeTestCommand extends CommandBase {
 
     // Vary intake motor speed only if the intake is extended //
     if(m_state){
-      m_intake.variableMotor(m_speed.get());
+      m_intake.variableMotor(m_speed.get() * 0.5);
     }
   }
 
