@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
+import frc.robot.commands.IntakeTest;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.IntakeCargoAutoCommand;
@@ -45,7 +46,9 @@ import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 import frc.robot.commands.General.IntakeCompressorOffCommand;
 import frc.robot.commands.General.IntakeCompressorOnCommand;
 import frc.robot.commands.General.IntakeNeutralCommand;
-import frc.robot.commands.General.VariableShootCommand;
+import frc.robot.commands.General.IntakeTestCommand;
+import frc.robot.commands.General.VariableIntakeCommand;
+import frc.robot.commands.General.VariableShooterCommand;
 import frc.robot.commands.General.VariableUptakeCommand;
 
 /**
@@ -87,37 +90,27 @@ public class RobotContainer {
         () -> m_driverController.getRawButton(Constants.BUMPER_LEFT)   // reverse
       )
     );
-    
-    // Set default intake to have neutral motor and intake //
-    // m_intakeSubsystem.setDefaultCommand(
-    //   new IntakePistonNeutralCommand(m_intakeSubsystem)
-    // );
-
-    // m_intakeSubsystem.setDefaultCommand(
-    //   new IntakeTest(
-    //     m_intakeSubsystem,
-    //     () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
-    //     () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
-    //     () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
-    //   )
-    // );
 
     m_intakeSubsystem.setDefaultCommand(
-      new IntakeNeutralCommand(m_intakeSubsystem)
+    new IntakeTestCommand(
+        m_intakeSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
+        () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
+        () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
+      )
     );
 
     m_uptakeSubsystem.setDefaultCommand(
       new VariableUptakeCommand(
         m_uptakeSubsystem,
-        () -> m_operatorController.getRawAxis(Constants.TRIGGER_RIGHT),
-        () -> -m_operatorController.getRawAxis(Constants.TRIGGER_LEFT)
+        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
       )
     );
 
     m_shooterSubsystem.setDefaultCommand(
-      new VariableShootCommand(
+      new VariableShooterCommand(
         m_shooterSubsystem,
-        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
+        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_Y)
       )
     );
 

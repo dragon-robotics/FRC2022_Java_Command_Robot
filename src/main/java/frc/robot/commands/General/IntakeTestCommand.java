@@ -36,7 +36,12 @@ public class IntakeTestCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    // Make sure the intake is retracted and the motor is stopped //
+    m_intake.stopMotor();
+    m_intake.pneumaticsRetract();
+    m_state = false;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
