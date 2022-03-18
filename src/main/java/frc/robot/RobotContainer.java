@@ -170,16 +170,16 @@ public class RobotContainer {
             m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_TOP_LOW_GOAL:
         return new TwoBallTopLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_TOP_LEFT_LOW_GOAL:
         return new TwoBallTopLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_BOT_LEFT_LOW_GOAL:
         return new TwoBallBotLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_BOT_LOW_GOAL:
         return new TwoBallBotLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case FOUR_BALL_TOP_LEFT_LOW_GOAL:
         return new FourBallTopLeftLowGoalCommand(
             m_drivetrainSubsystem, command);
