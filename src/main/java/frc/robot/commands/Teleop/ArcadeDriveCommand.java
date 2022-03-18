@@ -47,7 +47,7 @@ public class ArcadeDriveCommand extends CommandBase {
     double speed = m_reverse.get() ? -m_speed.get() * throttle : m_speed.get() * throttle;
     double rotation = m_rotation.get();
 
-    m_drivetrain.arcadeDrive(m_speed.get(), m_rotation.get());
+    m_drivetrain.arcadeDrive(speed, rotation);
   }
 
 
