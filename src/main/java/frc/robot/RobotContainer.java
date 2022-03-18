@@ -21,19 +21,30 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.UptakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.IntakeCargoAutoCommand;
 import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.ShootAutoCommand;
 import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
+import frc.robot.commands.General.IntakeCompressorOffCommand;
+import frc.robot.commands.General.IntakeCompressorOnCommand;
+import frc.robot.commands.General.IntakeTestCommand;
+import frc.robot.commands.General.VariableShooterCommand;
+import frc.robot.commands.General.VariableUptakeCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -45,14 +56,20 @@ public class RobotContainer {
 
   // Subsystems //
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  private final UptakeSubsystem m_uptakeSubsystem = new UptakeSubsystem();
+  private final ShooterSubsystem m_shooterSubsystem = new ShooterSubsystem();
 
   // Joystick - 1st driver (driver) = channel 0, 2nd driver (operator) = channel 1 //
   private final Joystick m_driverController = new Joystick(Constants.DRIVER);
+
   private final Joystick m_operatorController = new Joystick(Constants.OPERATOR);
+  private final JoystickButton m_intakeCompressorOffButton = new JoystickButton(m_operatorController, Constants.BTN_BACK);
+  private final JoystickButton m_intakeCompressorOnButton = new JoystickButton(m_operatorController, Constants.BTN_START);
+  private final JoystickButton m_intakeCargoButton = new JoystickButton(m_operatorController, Constants.BTN_A);
+  private final JoystickButton m_shootButton = new JoystickButton(m_operatorController, Constants.BTN_B);
 
   // Create the auto loader class to load everything for us //
-
-  // Create SmartDashboard chooser for autonomous routines
   private final AutoLoader m_autoLoader = new AutoLoader();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -62,10 +79,33 @@ public class RobotContainer {
     m_drivetrainSubsystem.setDefaultCommand(
       new ArcadeDriveCommand(
         m_drivetrainSubsystem,
-        () -> -m_driverController.getRawAxis(Constants.TRIGGER_RIGHT),  // speed
-        () -> m_driverController.getRawAxis(Constants.STICK_LEFT_X),    // turn
-        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),    // throttle
-        () -> m_driverController.getRawButton(Constants.BTN_A)          // reverse
+        () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),  // speed
+        () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),  // turn
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),   // throttle
+        () -> m_driverController.getRawButton(Constants.BUMPER_LEFT)   // reverse
+      )
+    );
+
+    m_intakeSubsystem.setDefaultCommand(
+    new IntakeTestCommand(
+        m_intakeSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
+        () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
+        () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
+      )
+    );
+
+    m_uptakeSubsystem.setDefaultCommand(
+      new VariableUptakeCommand(
+        m_uptakeSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
+      )
+    );
+
+    m_shooterSubsystem.setDefaultCommand(
+      new VariableShooterCommand(
+        m_shooterSubsystem,
+        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_Y)
       )
     );
 
@@ -83,7 +123,12 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {}
+  private void configureButtonBindings() {
+    m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
+    m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
+    m_intakeCargoButton.whenHeld(new IntakeCargoAutoCommand(m_intakeSubsystem, m_uptakeSubsystem));
+    m_shootButton.whenHeld(new ShootAutoCommand(m_uptakeSubsystem, m_shooterSubsystem));
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -101,28 +146,28 @@ public class RobotContainer {
         return getRamseteCommand();
       case ONE_BALL_TOP_LOW_GOAL:
         return new OneBallTopLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_TOP_LEFT_LOW_GOAL:
         return new OneBallTopLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_BOT_LEFT_LOW_GOAL:
         return new OneBallBotLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_BOT_LOW_GOAL:
         return new OneBallBotLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_TOP_LOW_GOAL:
         return new TwoBallTopLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_TOP_LEFT_LOW_GOAL:
         return new TwoBallTopLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_BOT_LEFT_LOW_GOAL:
         return new TwoBallBotLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_BOT_LOW_GOAL:
         return new TwoBallBotLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case FOUR_BALL_TOP_LEFT_LOW_GOAL:
         return new FourBallTopLeftLowGoalCommand(
             m_drivetrainSubsystem, command);
