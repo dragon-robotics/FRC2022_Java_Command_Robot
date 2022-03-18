@@ -2,14 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.General;
 
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeTest extends CommandBase {
+public class IntakeTestCommand extends CommandBase {
   /** Creates a new IntakeTest. */
 
   private final IntakeSubsystem m_intake;     // Intake Subsystem
@@ -19,7 +19,7 @@ public class IntakeTest extends CommandBase {
 
   private boolean m_state; // State of intake, extended = true, retracted = false
 
-  public IntakeTest(
+  public IntakeTestCommand(
     IntakeSubsystem intake,
     Supplier<Double> speed,
     Supplier<Boolean> extend,

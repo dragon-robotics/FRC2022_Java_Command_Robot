@@ -2,17 +2,17 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.General;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeMotorOffCommand extends CommandBase {
-  /** Creates a new IntakeCommand. */
+public class IntakeRetractCommand extends CommandBase {
+  /** Creates a new IntakeRetract. */
 
-  private final IntakeSubsystem m_intake;
+  private final IntakeSubsystem m_intake; // Intake Subsystem
 
-  public IntakeMotorOffCommand(
+  public IntakeRetractCommand(
     IntakeSubsystem intake
   ) {
     m_intake = intake;
@@ -28,12 +28,12 @@ public class IntakeMotorOffCommand extends CommandBase {
   @Override
   public void execute() {
     m_intake.stopMotor();
+    m_intake.pneumaticsRetract();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

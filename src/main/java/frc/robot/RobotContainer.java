@@ -25,37 +25,28 @@ import frc.robot.commands.Teleop.ArcadeDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.UptakeSubsystem;
-import frc.robot.commands.VariableShootCommand;
-import frc.robot.commands.VariableUptakeCommand;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
-import frc.robot.commands.IntakeCargo;
-import frc.robot.commands.IntakeCompressorOffCommand;
-import frc.robot.commands.IntakeCompressorOnCommand;
-import frc.robot.commands.IntakeEngage;
-import frc.robot.commands.IntakeMotorOnCommand;
-import frc.robot.commands.IntakeNeutral;
-import frc.robot.commands.IntakePistonExtendCommand;
-import frc.robot.commands.IntakeRetract;
-import frc.robot.commands.IntakeTest;
-import frc.robot.commands.ShootCommand;
-import frc.robot.commands.UptakeMotorOffCommand;
-import frc.robot.commands.UptakeMotorOnCommand;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
+import frc.robot.commands.Auto.IntakeCargoAutoCommand;
 import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.ShootAutoCommand;
 import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
+import frc.robot.commands.General.IntakeCompressorOffCommand;
+import frc.robot.commands.General.IntakeCompressorOnCommand;
+import frc.robot.commands.General.IntakeNeutralCommand;
+import frc.robot.commands.General.VariableShootCommand;
+import frc.robot.commands.General.VariableUptakeCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -112,7 +103,7 @@ public class RobotContainer {
     // );
 
     m_intakeSubsystem.setDefaultCommand(
-      new IntakeNeutral(m_intakeSubsystem)
+      new IntakeNeutralCommand(m_intakeSubsystem)
     );
 
     m_uptakeSubsystem.setDefaultCommand(
@@ -147,8 +138,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     m_intakeCompressorOffButton.whenPressed(new IntakeCompressorOffCommand(m_intakeSubsystem));
     m_intakeCompressorOnButton.whenPressed(new IntakeCompressorOnCommand(m_intakeSubsystem));
-    m_intakeCargoButton.whenHeld(new IntakeCargo(m_intakeSubsystem, m_uptakeSubsystem));
-    m_shootButton.whenHeld(new ShootCommand(m_uptakeSubsystem, m_shooterSubsystem));
+    m_intakeCargoButton.whenHeld(new IntakeCargoAutoCommand(m_intakeSubsystem, m_uptakeSubsystem));
+    m_shootButton.whenHeld(new ShootAutoCommand(m_uptakeSubsystem, m_shooterSubsystem));
   }
 
   /**
@@ -167,16 +158,16 @@ public class RobotContainer {
         return getRamseteCommand();
       case ONE_BALL_TOP_LOW_GOAL:
         return new OneBallTopLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_TOP_LEFT_LOW_GOAL:
         return new OneBallTopLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_BOT_LEFT_LOW_GOAL:
         return new OneBallBotLeftLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case ONE_BALL_BOT_LOW_GOAL:
         return new OneBallBotLowGoalCommand(
-            m_drivetrainSubsystem, command);
+            m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
       case TWO_BALL_TOP_LOW_GOAL:
         return new TwoBallTopLowGoalCommand(
             m_drivetrainSubsystem, command);

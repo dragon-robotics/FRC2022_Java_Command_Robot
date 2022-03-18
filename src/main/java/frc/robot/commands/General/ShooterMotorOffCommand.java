@@ -2,24 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.General;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
-public class IntakeRetract extends CommandBase {
-  /** Creates a new IntakeRetract. */
+public class ShooterMotorOffCommand extends CommandBase {
+  private final ShooterSubsystem m_shooter;
 
-  private final IntakeSubsystem m_intake; // Intake Subsystem
-
-  public IntakeRetract(
-    IntakeSubsystem intake
+  /** Creates a new ShooterMotorOff. */
+  public ShooterMotorOffCommand(
+    ShooterSubsystem shooter
   ) {
-    m_intake = intake;
+    m_shooter = shooter;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(intake);
+    addRequirements(shooter); 
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -27,8 +25,7 @@ public class IntakeRetract extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.stopMotor();
-    m_intake.pneumaticsRetract();
+    m_shooter.stopMotor();
   }
 
   // Called once the command ends or is interrupted.

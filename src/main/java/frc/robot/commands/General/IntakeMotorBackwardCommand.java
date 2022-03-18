@@ -2,27 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
-
-import java.util.function.Supplier;
+package frc.robot.commands.General;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeMotorVariedCommand extends CommandBase {
+public class IntakeMotorBackwardCommand extends CommandBase {
+  /** Creates a new IntakeCommand. */
 
   private final IntakeSubsystem m_intake;
-  private final Supplier<Double> m_speed;
 
-  /** Creates a new IntakeMotorVariedCommand. */
-  public IntakeMotorVariedCommand(
-    IntakeSubsystem intake,
-    Supplier<Double> speed
+  public IntakeMotorBackwardCommand(
+    IntakeSubsystem intake
   ) {
     m_intake = intake;
-    m_speed = speed;
-  
-    // Use addRequirements() here to declare subsystem dependencies.
+    // Use addRequirements() here to decslare subsystem dependencies.
     addRequirements(intake);
   }
 
@@ -33,7 +27,7 @@ public class IntakeMotorVariedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_intake.variableMotor(m_speed.get());
+    m_intake.reverseMotor();
   }
 
   // Called once the command ends or is interrupted.
