@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.AutoLoader.AutoCommand;
-import frc.robot.commands.IntakeTest;
 import frc.robot.commands.Auto.FiveBallBotLowGoalCommand;
 import frc.robot.commands.Auto.FourBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.IntakeCargoAutoCommand;
@@ -45,9 +44,7 @@ import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 import frc.robot.commands.General.IntakeCompressorOffCommand;
 import frc.robot.commands.General.IntakeCompressorOnCommand;
-import frc.robot.commands.General.IntakeNeutralCommand;
 import frc.robot.commands.General.IntakeTestCommand;
-import frc.robot.commands.General.VariableIntakeCommand;
 import frc.robot.commands.General.VariableShooterCommand;
 import frc.robot.commands.General.VariableUptakeCommand;
 
