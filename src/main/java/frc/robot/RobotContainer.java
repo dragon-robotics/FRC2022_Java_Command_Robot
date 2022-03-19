@@ -37,6 +37,7 @@ import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
 import frc.robot.commands.Auto.ShootAutoCommand;
+import frc.robot.commands.Auto.TaxiCommand;
 import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallBotLowGoalCommand;
 import frc.robot.commands.Auto.TwoBallTopLeftLowGoalCommand;
@@ -84,14 +85,14 @@ public class RobotContainer {
         () -> -m_driverController.getRawAxis(Constants.STICK_LEFT_Y),  // speed
         () -> m_driverController.getRawAxis(Constants.STICK_RIGHT_X),  // turn
         () -> m_driverController.getRawAxis(Constants.TRIGGER_LEFT),   // throttle
-        () -> m_driverController.getRawButton(Constants.BUMPER_LEFT)   // reverse
+        () -> m_driverController.getRawButton(Constants.BUMPER_RIGHT)   // reverse
       )
     );
 
     m_intakeSubsystem.setDefaultCommand(
     new IntakeTestCommand(
         m_intakeSubsystem,
-        () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_X),    // speed
+        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y),    // speed
         () -> m_operatorController.getRawButton(Constants.BUMPER_RIGHT),  // extend
         () -> m_operatorController.getRawButton(Constants.BUMPER_LEFT)    // retract
       )
@@ -100,7 +101,7 @@ public class RobotContainer {
     m_uptakeSubsystem.setDefaultCommand(
       new VariableUptakeCommand(
         m_uptakeSubsystem,
-        () -> m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
+        () -> -m_operatorController.getRawAxis(Constants.STICK_RIGHT_Y)
       )
     );
 
@@ -146,6 +147,8 @@ public class RobotContainer {
         return null;
       case EXAMPLE_TRAJECTORY:
         return getRamseteCommand();
+      case TAXI:
+        return new TaxiCommand(m_drivetrainSubsystem, 0.6, 2);
       case ONE_BALL_TOP_LOW_GOAL:
         return new OneBallTopLowGoalCommand(
             m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);

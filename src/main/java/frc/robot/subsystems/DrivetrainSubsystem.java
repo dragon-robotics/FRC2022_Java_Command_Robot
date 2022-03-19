@@ -69,10 +69,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_talonRightFollow.set(ControlMode.PercentOutput, 0);
 
     // Set neutral mode to brake on all motors //
-    m_talonLeftLead.setNeutralMode(NeutralMode.Brake);
-    m_talonLeftFollow.setNeutralMode(NeutralMode.Brake);
-    m_talonRightLead.setNeutralMode(NeutralMode.Brake);
-    m_talonRightFollow.setNeutralMode(NeutralMode.Brake);
+    m_talonLeftLead.setNeutralMode(NeutralMode.Coast);
+    m_talonLeftFollow.setNeutralMode(NeutralMode.Coast);
+    m_talonRightLead.setNeutralMode(NeutralMode.Coast);
+    m_talonRightFollow.setNeutralMode(NeutralMode.Coast);
 
     // Set our followers to follow the lead motor //
     m_talonLeftFollow.follow(m_talonLeftLead);

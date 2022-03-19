@@ -50,19 +50,15 @@ public class IntakeTestCommand extends CommandBase {
     // Extend the intake //
     if(m_extend.get()){
       m_intake.pneumaticsExtend();
-      m_state = true;
     }
 
     // Retract the intake //
     if (m_retract.get()) {
       m_intake.pneumaticsRetract();
-      m_state = false;
     }
 
     // Vary intake motor speed only if the intake is extended //
-    if(m_state){
-      m_intake.variableMotor(m_speed.get() * 0.5);
-    }
+    m_intake.variableMotor(m_speed.get() * 0.5);
   }
 
   // Called once the command ends or is interrupted.
