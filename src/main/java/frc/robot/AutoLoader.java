@@ -17,6 +17,7 @@ public class AutoLoader {
         NONE, // Does Nothing
         EXAMPLE_TRAJECTORY, // Executes the Example Trajectory for Testing
         TAXI, // Just leaves the tarmac without scoring
+        SHOOT_AND_TAXI, // Shoot the ball and taxi for 2 seconds
         // LOW GOAL //
         ONE_BALL_TOP_LOW_GOAL, // Scores the 1 ball on the low goal from the top side of the tarmac
         ONE_BALL_TOP_LEFT_LOW_GOAL, // Scores the 1 ball on the low goal from the top left side of the tarmac
@@ -68,11 +69,12 @@ public class AutoLoader {
 
         // Default option is to always have no auto command running //
         // m_autoChooser.setDefaultOption("None", AutoCommand.NONE);
-        m_autoChooser.setDefaultOption("Taxi", AutoCommand.TAXI);
+        m_autoChooser.setDefaultOption("Shoot and Taxi", AutoCommand.SHOOT_AND_TAXI);
 
         // Initialize the rest of the options //
         m_autoChooser.addOption("Example Trajectory", AutoCommand.EXAMPLE_TRAJECTORY);
         m_autoChooser.addOption("Taxi", AutoCommand.TAXI);
+        m_autoChooser.addOption("Shoot and Taxi", AutoCommand.SHOOT_AND_TAXI);
         m_autoChooser.addOption("One Ball Top Low Goal", AutoCommand.ONE_BALL_TOP_LOW_GOAL);
         m_autoChooser.addOption("One Ball Top Left Low Goal", AutoCommand.ONE_BALL_TOP_LEFT_LOW_GOAL);
         m_autoChooser.addOption("One Ball Bottom Left Low Goal", AutoCommand.ONE_BALL_BOT_LEFT_LOW_GOAL);

@@ -36,6 +36,7 @@ import frc.robot.commands.Auto.OneBallBotLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallBotLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLeftLowGoalCommand;
 import frc.robot.commands.Auto.OneBallTopLowGoalCommand;
+import frc.robot.commands.Auto.ShootAndTaxiCommand;
 import frc.robot.commands.Auto.ShootAutoCommand;
 import frc.robot.commands.Auto.TaxiCommand;
 import frc.robot.commands.Auto.TwoBallBotLeftLowGoalCommand;
@@ -149,6 +150,8 @@ public class RobotContainer {
         return getRamseteCommand();
       case TAXI:
         return new TaxiCommand(m_drivetrainSubsystem, 0.6, 2);
+      case SHOOT_AND_TAXI:
+        return new ShootAndTaxiCommand(m_drivetrainSubsystem, m_uptakeSubsystem, m_shooterSubsystem);
       case ONE_BALL_TOP_LOW_GOAL:
         return new OneBallTopLowGoalCommand(
             m_drivetrainSubsystem, m_intakeSubsystem, m_uptakeSubsystem, m_shooterSubsystem, command);
