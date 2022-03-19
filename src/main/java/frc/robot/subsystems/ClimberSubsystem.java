@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,6 +17,10 @@ public class ClimberSubsystem extends SubsystemBase {
   CANSparkMax m_climberR = new CANSparkMax(10, MotorType.kBrushless);
 
   public ClimberSubsystem() {
+    // Set climber to brake mode //
+    m_climberL.setIdleMode(IdleMode.kBrake);
+    m_climberR.setIdleMode(IdleMode.kBrake);
+    
     // Invert 1 side of the climber //
     m_climberL.setInverted(true);
   }
