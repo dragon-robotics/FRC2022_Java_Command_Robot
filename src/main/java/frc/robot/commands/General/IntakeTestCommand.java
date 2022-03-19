@@ -17,8 +17,6 @@ public class IntakeTestCommand extends CommandBase {
   private final Supplier<Boolean> m_extend;   // Extend Intake
   private final Supplier<Boolean> m_retract;  // Retract Intake
 
-  private boolean m_state; // State of intake, extended = true, retracted = false
-
   public IntakeTestCommand(
     IntakeSubsystem intake,
     Supplier<Double> speed,
@@ -29,7 +27,6 @@ public class IntakeTestCommand extends CommandBase {
     m_speed = speed;
     m_extend = extend;
     m_retract = retract;
-    m_state = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -40,7 +37,6 @@ public class IntakeTestCommand extends CommandBase {
     // Make sure the intake is retracted and the motor is stopped //
     m_intake.stopMotor();
     m_intake.pneumaticsRetract();
-    m_state = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
