@@ -38,7 +38,7 @@ public class VariableClimberCommand extends CommandBase {
       m_climber.climb(m_upSpeed.get());
     }
 
-    if(m_downSpeed.get() > 0){
+    if(m_downSpeed.get() < 0){
       m_climber.climb(m_downSpeed.get());
     }
   }

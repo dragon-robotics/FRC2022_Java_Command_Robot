@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new Climber. */
 
-  CANSparkMax m_climberL = new CANSparkMax(9, MotorType.kBrushless);
-  CANSparkMax m_climberR = new CANSparkMax(10, MotorType.kBrushless);
+  CANSparkMax m_climberL = new CANSparkMax(3, MotorType.kBrushless);
+  CANSparkMax m_climberR = new CANSparkMax(8, MotorType.kBrushless);
 
   public ClimberSubsystem() {
     // Set climber to brake mode //

@@ -46,6 +46,7 @@ import frc.robot.commands.Auto.TwoBallTopLowGoalCommand;
 import frc.robot.commands.General.IntakeCompressorOffCommand;
 import frc.robot.commands.General.IntakeCompressorOnCommand;
 import frc.robot.commands.General.IntakeTestCommand;
+import frc.robot.commands.General.VariableClimberCommand;
 import frc.robot.commands.General.VariableShooterCommand;
 import frc.robot.commands.General.VariableUptakeCommand;
 
@@ -110,6 +111,14 @@ public class RobotContainer {
       new VariableShooterCommand(
         m_shooterSubsystem,
         () -> m_operatorController.getRawAxis(Constants.STICK_LEFT_Y)
+      )
+    );
+
+    m_climberSubsystem.setDefaultCommand(
+      new VariableClimberCommand(
+        m_climberSubsystem, 
+        () -> m_driverController.getRawAxis(Constants.TRIGGER_RIGHT), 
+        () -> -m_operatorController.getRawAxis(Constants.TRIGGER_RIGHT)
       )
     );
 
